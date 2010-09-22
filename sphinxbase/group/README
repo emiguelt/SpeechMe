@@ -1,0 +1,8 @@
+sphinxbase building for Symbian
+
+Current status:
+- Compiling for phone (debug) using GCCE (Nokia_Symbian3_SDK_v0.8)
+
+
+Environment configurations:
+- Copy the header file "file.h" Nokia_Symbian3_SDK_v0.8\epoc32\include\libc\sys to Nokia_Symbian3_SDK_v0.8\epoc32\include\stdapis\sys
