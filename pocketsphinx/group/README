@@ -1,0 +1,10 @@
+pocketsphinx building for Symbian
+
+Current status:
+- Compiling for phone (debug) using GCCE (Nokia_Symbian3_SDK_v0.8)
+- Compiling "continuos" program for phone (debug) using GCCE (Nokia_Symbian3_SDK_v0.8). NOT TESTED
+- Compiling "batch" program for phone (debug) using GCCE (Nokia_Symbian3_SDK_v0.8). NOT TESTED
+
+
+Environment configurations:
+- Copy the header file "file.h" Nokia_Symbian3_SDK_v0.8\epoc32\include\libc\sys to Nokia_Symbian3_SDK_v0.8\epoc32\include\stdapis\sys
