@@ -1,0 +1,27 @@
+/*
+============================================================================
+ Name		: continuous.mmp
+ Author	  : Edwin Miguel Triana Gomez
+ Copyright   : 
+ Description : This is the project specification file for continuous.
+============================================================================
+*/
+
+TARGET		  test_continuous.exe
+TARGETTYPE	  STDEXE
+UID 0x20004C45 0xEEB10FB4
+
+SYSTEMINCLUDE   \epoc32\include \epoc32\include\stdapis \epoc32\include\stdapis\sys
+
+SOURCEPATH ..\src
+
+LIBRARY libm.lib pocketsphinx.lib sphinxbase.lib
+CAPABILITY UserEnvironment
+
+#ifdef ENABLE_ABIV2_MODE
+DEBUGGABLE_UDEBONLY
+#endif
+
+USERINCLUDE ..\..\pocketsphinx\include ..\..\sphinxbase\include\s60 ..\..\sphinxbase\include\sphinxbase ..\..\sphinxbase\include
+
+SOURCE test_continuous.c
