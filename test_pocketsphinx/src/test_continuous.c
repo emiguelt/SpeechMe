@@ -9,7 +9,7 @@
 #include <sphinxbase/err.h>
 #include <sphinxbase/ad.h>
 #include <sphinxbase/cont_ad.h>
-#include "pocketsphinx.h"
+#include <pocketsphinx.h>
 
 static ps_decoder_t *ps;
 static cmd_ln_t *config;
@@ -44,7 +44,8 @@ void pause(char * c){
 }
 
 int main(int argc, char *argv[]){       
-	config = cmd_ln_init(NULL, cont_args_def, TRUE, "-hmm", ".\\model\\hmm", "-dict", ".\\model\\dic.dic", "-lm", ".\\model\\lm.DMP", NULL);
+	config = cmd_ln_init(NULL, cont_args_def, TRUE, "-hmm", "c:/model/hmm", 
+			"-dict", "c:/model/tidigits.dic", "-lm", ".c:/model/tidigits.DMP" , "-debug", "1", NULL);
 	pause("revisar config");
 	if(config == NULL){
 		pause("config null");
