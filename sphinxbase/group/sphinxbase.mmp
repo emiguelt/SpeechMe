@@ -15,7 +15,7 @@ EPOCSTACKSIZE	 0x5000
 
 USERINCLUDE	 ..\include ..\include\sphinxbase ..\include\s60
 SYSTEMINCLUDE   \epoc32\include \epoc32\include\stdapis \epoc32\include\stdapis\sys
-SYSTEMINCLUDE \epoc32\include\mmf\server 
+SYSTEMINCLUDE \epoc32\include\mmf\server \epoc32\include\platform
 
 #ifdef ENABLE_ABIV2_MODE
 DEBUGGABLE_UDEBONLY
@@ -36,6 +36,5 @@ SOURCE ad_s60.cpp
 
 /*EXPORTUNFROZEN/*comment to release*/
 
-LIBRARY euser.lib libm.lib libpthread.lib mediaclientaudioinputstream.lib 
-LIBRARY estlib.lib libc.lib
-CAPABILITY UserEnvironment
+LIBRARY libm.lib libpthread.lib mediaclientaudioinputstream.lib 
+CAPABILITY AllFiles MultimediaDD UserEnvironment
