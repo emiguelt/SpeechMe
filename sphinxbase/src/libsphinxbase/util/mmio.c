@@ -46,6 +46,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #ifdef GNUWINCE
 # include <sys/wcebase.h>

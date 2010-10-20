@@ -10,13 +10,15 @@
 TARGET		  test_continuous.exe
 TARGETTYPE	  STDEXE
 UID 0x20004C45 0xEEB10FB4
+EPOCSTACKSIZE	 0x14000
+EPOCHEAPSIZE 0x20000 0x1000000
 
 SYSTEMINCLUDE   \epoc32\include \epoc32\include\stdapis \epoc32\include\stdapis\sys
 
 SOURCEPATH ..\src
 
 LIBRARY libm.lib pocketsphinx.lib sphinxbase.lib
-CAPABILITY UserEnvironment
+CAPABILITY AllFiles MultimediaDD UserEnvironment
 
 #ifdef ENABLE_ABIV2_MODE
 DEBUGGABLE_UDEBONLY
