@@ -14,6 +14,7 @@
 #include "ui_QtSpeech.h"
 #include "DecoderControl.h"
 
+class DecoderControl;
 class QtSpeech : public QMainWindow
 {
     Q_OBJECT
@@ -21,10 +22,11 @@ class QtSpeech : public QMainWindow
 public:
 	QtSpeech(QWidget *parent = 0);
     ~QtSpeech();
+    void addSentence(const char * sentence);
 
 private:
     Ui::QtSpeech ui;
-    DecoderControl dc;
+    DecoderControl* dc;
     
 public slots:
 	void browseHmm();

@@ -10,13 +10,13 @@
 #include <qstring.h>
 #include "QtSpeech.h"
 #include <iostream>
-
 using namespace std;
 
 QtSpeech::QtSpeech(QWidget *parent)
     : QMainWindow(parent)
 {
 	ui.setupUi(this);
+	dc = new DecoderControl(this);
 	
 	connect(ui.hmmBrowseButton, SIGNAL(clicked()), this, SLOT(browseHmm()));
 	connect(ui.lmBrowseButton, SIGNAL(clicked()), this, SLOT(browseLm()));
@@ -49,6 +49,11 @@ void QtSpeech::startDecoding(){
 	string  hmm = ui.hmm->text().toStdString();
 	string  lm = ui.language->text().toStdString();
 	string  dict = ui.dict->text().toStdString();
-	dc.initDecoder(hmm,lm,dict);
+	dc->initDecoder(hmm,lm,dict);
 	
+}
+
+void QtSpeech::addSentence(const char* sentence){
+	QString newSentence(sentence);
+	ui.plainTextEdit->appendPlainText(newSentence);
 }

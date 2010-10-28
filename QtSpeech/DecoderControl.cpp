@@ -6,34 +6,47 @@
  */
 
 #include "DecoderControl.h"
-#include <sphinxbase/err.h>
-#include <sphinxbase/ad.h>
-#include <sphinxbase/cont_ad.h>
-#include <pocketsphinx.h>
-#include <sphinxbase/cmd_ln.h>
 #include <iostream>
+#include <Msrs.h>
+#include <Observer.h>
 
 using namespace std;
 
-DecoderControl::DecoderControl()
+DecoderControl::DecoderControl(QtSpeech* newView)
 	{
-	// TODO Auto-generated constructor stub
-
+	msrs = Msrs::getInstance();
+	msrs->Attach(this);
+	myview = newView;
 	}
 
 DecoderControl::~DecoderControl()
 	{
-	// TODO Auto-generated destructor stub
+	msrs->Detach(this);
+	delete msrs;
 	}
 
 void DecoderControl::initDecoder(string hmm, string lm, string dict){
-	config = cmd_ln_init(NULL, cont_args_def, TRUE, "-hmm", hmm.data(), 
-				"-dict", dict.data(), "-lm", lm.data(), NULL);
-	if(config ==NULL){
-		return;
+	if(msrs->setConfig(NULL, cont_args_def, TRUE, "-hmm", hmm.data(), "-lm", lm.data(), "-dict", dict.data(), NULL)){
+		myview->addSentence("Decoder configured\n");
+		if(msrs->initDecoder()){
+			myview->addSentence("Decoder initialized\n");
+			if(msrs->startLiveDecoding()){
+				myview->addSentence("Decoder ready\n");
+			}else{
+				myview->addSentence("Decoder not ready\n");
+			}
+		}else{
+			myview->addSentence("Decoder not initialized\n");
+		}
+	}else{
+		myview->addSentence("Decoder not configured\n");
 	}
-	ps = ps_init(config);
-	if(ps == NULL){
-		return;
-	}
+}
+
+void DecoderControl::Update(Subject* subject){
+	
+}
+
+void DecoderControl::UpdateSentence(Subject* subject){
+	myview->addSentence(msrs->getLastSentence());
 }

@@ -1,0 +1,17 @@
+/*
+============================================================================
+ Name		: bld.inf
+ Author	  : Edwin Miguel Triana Gómez
+ Copyright   : 
+ Description : This file provides the information required for building the
+				whole of a msrs.
+============================================================================
+*/
+
+PRJ_PLATFORMS
+DEFAULT
+
+PRJ_EXPORTS
+
+PRJ_MMPFILES
+msrs.mmp
