@@ -14,14 +14,15 @@ FORMS += QtSpeech.ui
 INCLUDEPATH += C:\\sphinx\pocketsphinx\include \
     C:\sphinx\sphinxbase\include\s60 \
     C:\sphinx\sphinxbase\include\sphinxbase \
-    C:\sphinx\sphinxbase\include
+    C:\sphinx\sphinxbase\include \
+    C:\sphinx\msrs\inc
 RESOURCES += 
 symbian{
 TARGET.UID3 = 0xEB71B053
 TARGET.EPOCSTACKSIZE = 0x14000
-TARGET.EPOCHEAPSIZE = 0x020000 0x800000
-LIBS += -lsphinxbase -lpocketsphinx
-myfiles.sources = sphinxbase.dll pocketsphinx.dll
+TARGET.EPOCHEAPSIZE = 0x020000 0x800000 
+LIBS += -lsphinxbase -lpocketsphinx -lmsrs.lib 
+myfiles.sources = sphinxbase.dll pocketsphinx.dll msrs.dll
 myfiles.path = /sys/bin
 DEPLOYMENT += myfiles
 }

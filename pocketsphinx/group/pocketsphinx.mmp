@@ -11,7 +11,7 @@ TARGET		  pocketsphinx.dll
 TARGETTYPE	  STDDLL
 UID 0x20004C45 0xe000acd3
 EPOCALLOWDLLDATA
-EPOCSTACKSIZE	 0x5000
+EPOCSTACKSIZE	 0x14000
 
 USERINCLUDE	 ..\include ..\src\libpocketsphinx ..\..\sphinxbase\include\s60 ..\..\sphinxbase\include\sphinxbase ..\..\sphinxbase\include
 SYSTEMINCLUDE   \epoc32\include \epoc32\include\stdapis \epoc32\include\stdapis\sys
