@@ -26,7 +26,11 @@ DecoderControl::~DecoderControl()
 	}
 
 void DecoderControl::initDecoder(string hmm, string lm, string dict){
-	if(msrs->setConfig(NULL, cont_args_def, TRUE, "-hmm", hmm.data(), "-lm", lm.data(), "-dict", dict.data(), NULL)){
+	if(msrs->isLiveDecoding()){
+		msrs->stopLiveDecoding();
+		return;
+	}
+	if(msrs->setConfig(NULL, cont_args_def, TRUE, "-hmm", hmm.data(), "-jsgf", lm.data(), "-dict", dict.data(), NULL)){
 		myview->addSentence("Decoder configured\n");
 		if(msrs->initDecoder()){
 			myview->addSentence("Decoder initialized\n");
@@ -44,7 +48,25 @@ void DecoderControl::initDecoder(string hmm, string lm, string dict){
 }
 
 void DecoderControl::Update(Subject* subject){
-	
+	switch(msrs->getStatus()){
+		case 1:
+		myview->addSentence("Ready...");
+		break;
+		case 2:
+				myview->addSentence("listening...");
+				break;
+		case 3:
+				myview->addSentence("processing...");
+				break;
+		case 4:
+				myview->addSentence("stopped...");
+				break;
+		case 5:
+				myview->addSentence("fail...");
+				break;
+		default:
+			myview->addSentence("State unknown");
+	}
 }
 
 void DecoderControl::UpdateSentence(Subject* subject){

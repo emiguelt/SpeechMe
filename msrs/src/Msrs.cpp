@@ -15,20 +15,24 @@
 #include <sphinxbase/ad.h>
 #include <sphinxbase/cont_ad.h>
 #include <pocketsphinx.h>
+#include <pthread.h>
 
 Msrs* Msrs::instance=0;
-int Msrs::READY=1;
-int Msrs::LISTENING=2;
-int Msrs::PROCESSING=3;
-int Msrs::STOPPED=4;
-int Msrs::FAIL=5;
+const int Msrs::READY=1;
+const int Msrs::LISTENING=2;
+const int Msrs::PROCESSING=3;
+const int Msrs::STOPPED=4;
+const int Msrs::FAIL=5;
 
 Msrs::Msrs()
 	{
+	pthread_mutex_init(&m_mutex, NULL);
+	setLiveDecoding(FALSE);
 	}
 
 Msrs::~Msrs()
 	{
+	pthread_mutex_destroy(&m_mutex);
 	// TODO free resources
 	}
 
@@ -42,7 +46,7 @@ Msrs* Msrs::getInstance(){
 
 bool Msrs::setConfig(cmd_ln_t *inout_cmdln, arg_t const *defn, int32 strict, ...){
 //	config = cmd_ln_init(inout_cmdln, defn,strict);
-	config = cmd_ln_init(NULL, cont_args_def, TRUE, "-hmm", "c:/commands/hmm",
+	config = cmd_ln_init(NULL, cont_args_def, TRUE, "-hmm", "c:/commands/hmm", "-samprate", "11050",
 				"-dict", "c:/commands/commands.dic", "-jsgf", "c:/commands/commands.jsgf", "-latsize", "1000" , NULL);
 	return config!=NULL;
 }
@@ -56,17 +60,20 @@ bool Msrs::startLiveDecoding(){
 	if(!ps)
 		return FALSE;
 	if (setjmp(jbuf) == 0) {
-		recognize_from_microphone();
+		go();
 	}
 	return TRUE;
 }
 
 void Msrs::stopLiveDecoding(){
 	setLiveDecoding(FALSE);
+	pthread_join(m_thread, NULL);
 }
 
 void Msrs::setLiveDecoding(bool decoding){
+	pthread_mutex_lock(&m_mutex);
 	liveDecoding = decoding;
+	pthread_mutex_unlock(&m_mutex);
 }
 
 bool Msrs::isLiveDecoding()const {
@@ -145,13 +152,13 @@ void Msrs::recognize_from_microphone()
     for (;liveDecoding;) {
         /* Indicate listening for next utterance */
     	setStatus(READY);
-//        printf("READY....\n");
-//        fflush(stdout);
-//        fflush(stderr);
 
         /* Wait data for next utterance */
-        while ((k = cont_ad_read(cont, adbuf, 4096)) == 0)
+        while ((k = cont_ad_read(cont, adbuf, 4096)) == 0 && liveDecoding)
             sleep_msec(100);
+        if(!liveDecoding){
+        	break;
+        }
 
         if (k < 0){
             E_ERROR("Failed to read audio\n");
@@ -171,14 +178,12 @@ void Msrs::recognize_from_microphone()
         }
         ps_process_raw(ps, adbuf, k, FALSE, FALSE);
         setStatus(LISTENING);
-//        printf("Listening...\n");
-//        fflush(stdout);
 
         /* Note timestamp for this first block of data */
         ts = cont->read_ts;
 
         /* Decode utterance until end (marked by a "long" silence, >1sec) */
-        for (;;) {
+        for (;liveDecoding;) {
             /* Read non-silence audio data, if any, from continuous listening module */
             if ((k = cont_ad_read(cont, adbuf, 4096)) < 0){
                 E_ERROR("Failed to read audio\n");
@@ -214,22 +219,20 @@ void Msrs::recognize_from_microphone()
          * listening until current utterance completely decoded
          */
         ad_stop_rec(ad);
-        while (ad_read(ad, adbuf, 4096) >= 0);
+        while (ad_read(ad, adbuf, 4096) >= 0 && liveDecoding);
+        if(!liveDecoding){
+        	break;
+        }
         cont_ad_reset(cont);
         
         setStatus(PROCESSING);
 
-//        printf("Stopped listening, please wait...\n");
-//        fflush(stdout);
         /* Finish decoding, obtain and print result */
         ps_end_utt(ps);
         hyp = ps_get_hyp(ps, NULL, &uttid);
-//        printf("%s: %s\n", uttid, hyp);
-//        fflush(stdout);
         
         setLastSentence(hyp);
         NotifyNewSentece();
-
 
         /* Resume A/D recording for next utterance */
         if (ad_start_rec(ad) < 0){
@@ -240,6 +243,7 @@ void Msrs::recognize_from_microphone()
         }
     }
 
+    setStatus(STOPPED);
     cont_ad_close(cont);
     ad_close(ad);
 }
@@ -247,5 +251,14 @@ void Msrs::recognize_from_microphone()
 void Msrs::sighandler(int signo)
 {
     longjmp(jbuf, 1);
+}
+
+void Msrs::go(){
+	pthread_create(&m_thread,0,Msrs::start_thread,(void*)this);
+}
+
+
+void* Msrs::start_thread(void *obj){
+	reinterpret_cast<Msrs *>(obj)->recognize_from_microphone();
 }
 
