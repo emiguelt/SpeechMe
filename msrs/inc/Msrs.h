@@ -13,7 +13,7 @@
 #include <sphinxbase/cont_ad.h>
 #include <pocketsphinx.h>
 #include <sphinxbase/cmd_ln.h>
-#include <boost/thread/thread.hpp>
+#include <pthread.h>
 #include "Observer.h"
 
 
@@ -51,7 +51,8 @@ private:
 	bool liveDecoding;
 	char const *lastSentence;
 	int status;
-	boost::thread thread;
+	pthread_t m_thread;
+	pthread_mutex_t m_mutex;
 	
 	void setStatus(int newStatus);
 	void sleep_msec(int32 ms);
@@ -59,6 +60,7 @@ private:
 	void	sighandler(int signo);
 public:
 	static Msrs *getInstance();
+	static void *start_thread(void *obj);
 	bool setConfig(cmd_ln_t *inout_cmdln, const arg_t *defn, int32 strict, ...);
     bool initDecoder();
     bool startLiveDecoding();
@@ -68,15 +70,16 @@ public:
     char const * getLastSentence();
     void setLastSentence(char const* newSentence);
     int getStatus();
+    void go();
     virtual ~Msrs();
     
 public:
     //static variables
-	static int READY ;
-	static int LISTENING;
-	static int PROCESSING;
-	static int STOPPED;
-	static int FAIL;
+	static const int READY ;
+	static const int LISTENING;
+	static const int PROCESSING;
+	static const int STOPPED;
+	static const int FAIL;
 };
 
 #endif /* MSRS_H_ */
