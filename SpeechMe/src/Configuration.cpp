@@ -47,7 +47,7 @@ void Configuration::on_loadButton_clicked(){
 	string lm = ui.lmLineEdit->text().toStdString();
 	string dict = ui.dictLineEdit->text().toStdString();
 	
-	if(msrs->setConfig(NULL, cont_args_def, TRUE, "-hmm", hmm.data(), "-jsgf", lm.data(), "-dict", dict.data(), NULL)){
+	if(msrs->setConfig(lm.data(), hmm.data(), dict.data(), "11050")){
 		if(msrs->initDecoder()){
 			msrs->startLiveDecoding();
 		}
@@ -60,4 +60,21 @@ void Configuration::on_restoreButton_clicked(){
 
 void Configuration::setMsrs(Msrs* msrs){
 	this->msrs=msrs;
+}
+
+int Configuration::getServerPort(){
+	return ui.portSphinBox->value();
+}
+
+void Configuration::setServerRunning(bool opt){
+	if(opt){
+		ui.serverButton->setText(tr("Stop server"));
+	}else{
+		ui.serverButton->setText(tr("Start server"));
+	}
+	ui.portSphinBox->setEnabled(!opt);
+}
+
+void Configuration::on_serverButton_clicked(){
+	emit serverButton_clicked();
 }

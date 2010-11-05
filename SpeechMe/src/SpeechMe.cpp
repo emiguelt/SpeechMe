@@ -12,12 +12,12 @@
 #include <string>
 #include <QtGui/QBoxLayout>
 
+
 SpeechMe::SpeechMe(QWidget *parent)
     : QWidget(parent)
 {
 	ui.setupUi(this);
 	msrs = Msrs::getInstance();
-//	msrs = new MsrsWrapper();
 	msrs->Attach(this);
 	initExtraUi();
 	conf = new Configuration(this);
@@ -27,6 +27,9 @@ SpeechMe::SpeechMe(QWidget *parent)
 	speechPad = new SpeechPad(conf);
 	speechPad->hide();
 	speechPad->setMsrs(msrs);
+	
+	speechRemote = new SpeechRemote(this);
+	speechRemote->setMsrs(msrs);
 	
 	currentWidget = NULL;
 	createConnections();
@@ -52,7 +55,6 @@ void SpeechMe::initExtraUi(){
   testAction = new QAction(tr("Test"), this);
   testAction->setSoftKeyRole(QAction::PositiveSoftKey);
 
-  this->
   addAction(configAction);
   addAction(testAction);
 
@@ -61,6 +63,7 @@ void SpeechMe::initExtraUi(){
 void SpeechMe::createConnections(){
   connect(configAction, SIGNAL(triggered()),this , SLOT(on_configAction_triggered()));
   connect(testAction, SIGNAL(triggered()),this , SLOT(on_testAction_triggered()));
+  connect(conf, SIGNAL(serverButton_clicked()), this, SLOT(on_serverButton_clicked()));
 }
 
 void SpeechMe::Update(Subject* subject){
@@ -113,4 +116,14 @@ void SpeechMe::on_testAction_triggered(){
 	setMainWidget(speechPad);
 	configAction->setVisible(true);
 	testAction->setVisible(false);
+}
+
+void SpeechMe::on_serverButton_clicked(){
+	if(speechRemote->isRunning()){
+		speechRemote->stopServer();
+		conf->setServerRunning(FALSE);
+	}else{
+		conf->setServerRunning(speechRemote->startServer(conf->getServerPort()));
+	}
+	
 }

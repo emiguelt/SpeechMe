@@ -16,6 +16,7 @@
 #include "Configuration.h"
 #include "speechpad.h"
 #include "ui_SpeechMe.h"
+#include "speechremote.h"
 
 class SpeechMe : public QWidget,  public Observer
 {
@@ -31,6 +32,7 @@ private:
     Ui::SpeechMe ui;
     Configuration* conf;
     SpeechPad* speechPad;
+    SpeechRemote* speechRemote;
     QAction* configAction;
     QAction* testAction;
     QWidget* currentWidget;
@@ -44,6 +46,7 @@ private:
 public slots:
 	void on_configAction_triggered();
     void on_testAction_triggered();
+    void on_serverButton_clicked();
 };
 
 #endif // SPEECHME_H
