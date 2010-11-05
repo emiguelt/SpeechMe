@@ -12,18 +12,19 @@
 #include "ui_config.h"
 #include <Msrs.h>
 
-
-
 class Configuration: public QWidget
 	{
 	Q_OBJECT
 private:
 	Ui::ConfigUi ui;
 	Msrs* msrs;
+
 public:
 	Configuration(QWidget *parent = 0);
 	void setMsrs(Msrs* msrs);
 	virtual ~Configuration();
+	int getServerPort();
+	void setServerRunning(bool opt);
 	
 public slots:
 	void on_hmmButton_clicked();
@@ -31,6 +32,10 @@ public slots:
 	void on_dictButton_clicked();
 	void on_loadButton_clicked();
 	void on_restoreButton_clicked();
+	void on_serverButton_clicked();
+	
+signals:
+	void serverButton_clicked();
 	};
 
 #endif /* CONFIGURATION_H_ */

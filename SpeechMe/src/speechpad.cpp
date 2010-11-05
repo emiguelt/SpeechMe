@@ -18,8 +18,8 @@ void SpeechPad::Update(Subject* subject){
 }
 
 void SpeechPad::UpdateSentence(Subject* subject){
-	const QString* sent = new QString(msrs->getLastSentence());
-	ui->textSP->appendPlainText(*sent);
+	QString sent(msrs->getLastSentence());
+	ui->textSP->appendPlainText(sent);
 	ui->textSP->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
 }
 
