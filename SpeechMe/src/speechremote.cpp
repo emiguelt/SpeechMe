@@ -3,6 +3,7 @@
 #include <QtNetwork/qtcpserver.h>
 #include <QtNetwork/qtcpsocket.h>
 #include <qtextstream.h>
+#include <qmessagebox.h>
 
 SpeechRemote::SpeechRemote(QObject *parent) :
     QObject(parent), Observer()
@@ -24,17 +25,19 @@ void SpeechRemote::UpdateSentence(Subject* subject){
 }
 
 void SpeechRemote::newConnectionRequest(){
-	QString command;
-	QString client;
-	QTcpSocket* conn = server->nextPendingConnection();
-	QTextStream in(conn);
-	in>>client;
-	in>>command;
+	client = server->nextPendingConnection();
+	client->connect(client, SIGNAL(readyRead()), this, SLOT(dataReadytoRead()));
+	
 	//interpretar el comando para ejecutar
 	//ejecutar el comando
 	//devolver la respueta al cliente
 }
 
+void SpeechRemote::dataReadytoRead(){
+	QTextStream text(client);
+	emit newCommandArrived(text.readAll());	
+	closeClient();
+}
 bool SpeechRemote::startServer(int port){
 	if(server->isListening()){
 		if(server->serverPort()==port){
@@ -52,6 +55,10 @@ void SpeechRemote::stopServer(){
 	if(server->isListening()){
 		server->close();
 	}
+}
+
+void SpeechRemote::closeClient(){
+	client->close();
 }
 
 bool SpeechRemote::isRunning(){

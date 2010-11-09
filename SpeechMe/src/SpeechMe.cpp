@@ -64,6 +64,7 @@ void SpeechMe::createConnections(){
   connect(configAction, SIGNAL(triggered()),this , SLOT(on_configAction_triggered()));
   connect(testAction, SIGNAL(triggered()),this , SLOT(on_testAction_triggered()));
   connect(conf, SIGNAL(serverButton_clicked()), this, SLOT(on_serverButton_clicked()));
+  connect(speechRemote, SIGNAL(newCommandArrived(const QString&)), this, SLOT(on_newcommand_arrived(const QString&)));
 }
 
 void SpeechMe::Update(Subject* subject){
@@ -125,5 +126,10 @@ void SpeechMe::on_serverButton_clicked(){
 	}else{
 		conf->setServerRunning(speechRemote->startServer(conf->getServerPort()));
 	}
+	
+}
+
+void SpeechMe::on_newcommand_arrived(const QString &command){
+	ui.statusBar->setText(command);
 	
 }

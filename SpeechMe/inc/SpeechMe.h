@@ -47,6 +47,7 @@ public slots:
 	void on_configAction_triggered();
     void on_testAction_triggered();
     void on_serverButton_clicked();
+    void on_newcommand_arrived(const QString &command);
 };
 
 #endif // SPEECHME_H
