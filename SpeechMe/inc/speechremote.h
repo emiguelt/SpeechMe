@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QtNetwork/qtcpserver.h>
+#include <QtNetwork/qtcpsocket.h>
 #include <Observer.h>
 #include <Msrs.h>
 
@@ -22,11 +23,16 @@ public:
 private:
     QTcpServer* server;
     Msrs* msrs;
+    QTcpSocket* client;
+    
+    void closeClient();
     
 signals:
+    void newCommandArrived(const QString &command);
 
 public slots:
 	void newConnectionRequest();
+	void dataReadytoRead();
 
 };
 
