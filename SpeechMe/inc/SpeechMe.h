@@ -27,6 +27,9 @@ public:
     ~SpeechMe();
     virtual void Update(Subject* subject);
     virtual void UpdateSentence(Subject* subject);
+    
+    static const int ISOLATED_RECOGNITION=1;
+    static const int CONTINUOUS_RECOGNITION=2;
 
 private:
     Ui::SpeechMe ui;
@@ -47,7 +50,7 @@ public slots:
 	void on_configAction_triggered();
     void on_testAction_triggered();
     void on_serverButton_clicked();
-    void on_newcommand_arrived(const QString &command);
+    void on_newrequest_arrived(int request);
 };
 
 #endif // SPEECHME_H

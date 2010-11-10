@@ -16,7 +16,7 @@
 #include <pthread.h>
 #include "Observer.h"
 
-
+using namespace std;
 static const arg_t cont_args_def[] = {
     POCKETSPHINX_OPTIONS,
     /* Argument file. */
@@ -41,7 +41,7 @@ static const arg_t cont_args_def[] = {
 
 class Msrs:public Subject
 	{
-private:
+protected:
 	Msrs();
 	static Msrs *instance;
 	jmp_buf jbuf;
@@ -49,6 +49,7 @@ private:
 	cmd_ln_t *config;
 	FILE* rawfd;
 	bool liveDecoding;
+	bool isolatedDecoding;
 	char const *lastSentence;
 	int status;
 	pthread_t m_thread;
@@ -56,30 +57,33 @@ private:
 	
 	void setStatus(int newStatus);
 	void sleep_msec(int32 ms);
-	void	recognize_from_microphone();
 	void	sighandler(int signo);
+	void	recognize_from_microphone();
+	
 public:
 	static Msrs *getInstance();
 	static void *start_thread(void *obj);
-	bool setConfig(cmd_ln_t *inout_cmdln, const arg_t *defn, int32 strict, ...);
+	bool setConfig(const char* lm, const char* hmm, const char* dict, const char* samprate);
     bool initDecoder();
-    bool startLiveDecoding();
+    bool startLiveDecoding(bool isolated);
     void stopLiveDecoding();
     bool isLiveDecoding() const;
     void setLiveDecoding(bool decoding);
+    void setIsolatedDecoding(bool isolated);
+    bool isIsolatedDecoding()const;
     char const * getLastSentence();
     void setLastSentence(char const* newSentence);
     int getStatus();
     void go();
     virtual ~Msrs();
     
-public:
     //static variables
-	static const int READY ;
-	static const int LISTENING;
-	static const int PROCESSING;
-	static const int STOPPED;
-	static const int FAIL;
+    static const int CONFIGURED=0;
+	static const int READY=1;
+	static const int LISTENING=2;
+	static const int PROCESSING=3;
+	static const int STOPPED=4;
+	static const int FAIL=99;
 };
 
 #endif /* MSRS_H_ */

@@ -12,6 +12,7 @@ TARGETTYPE	  stddll
 UID 0x20004C45 0xE09278F9
 EPOCSTACKSIZE	 0x14000
 EPOCHEAPSIZE 0x20000 0x1000000
+EPOCALLOWDLLDATA
 
 USERINCLUDE	 ..\inc
 SYSTEMINCLUDE   \epoc32\include \epoc32\include\stdapis \epoc32\include\stdapis\sys \epoc32\include\stdapis\stlport
@@ -25,7 +26,7 @@ SOURCEPATH ..\src
 SOURCE Msrs.cpp Observer.cpp
 
 LIBRARY libm.lib pocketsphinx.lib sphinxbase.lib libpthread.lib
-CAPABILITY MultimediaDD UserEnvironment
+CAPABILITY UserEnvironment
 
 #ifdef ENABLE_ABIV2_MODE
 #endif

@@ -21,22 +21,26 @@ void SpeechRemote::Update(Subject* subject){
 }
 
 void SpeechRemote::UpdateSentence(Subject* subject){
+	char * sentence = msrs->getLastSentence();
+	QTextStream textStream(client);
+	textStream<<sentence;
+	textStream.flush();
 	
 }
 
 void SpeechRemote::newConnectionRequest(){
 	client = server->nextPendingConnection();
 	client->connect(client, SIGNAL(readyRead()), this, SLOT(dataReadytoRead()));
-	
-	//interpretar el comando para ejecutar
-	//ejecutar el comando
-	//devolver la respueta al cliente
 }
 
 void SpeechRemote::dataReadytoRead(){
-	QTextStream text(client);
-	emit newCommandArrived(text.readAll());	
-	closeClient();
+	QTextStream textStream(client);
+	bool check=false;
+	QString text = textStream.readAll();
+	int req = text.toInt(&check, 10);
+	if(check){
+		emit newRequestArrived(req);
+	}//not a command
 }
 bool SpeechRemote::startServer(int port){
 	if(server->isListening()){

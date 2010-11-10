@@ -64,27 +64,27 @@ void SpeechMe::createConnections(){
   connect(configAction, SIGNAL(triggered()),this , SLOT(on_configAction_triggered()));
   connect(testAction, SIGNAL(triggered()),this , SLOT(on_testAction_triggered()));
   connect(conf, SIGNAL(serverButton_clicked()), this, SLOT(on_serverButton_clicked()));
-  connect(speechRemote, SIGNAL(newCommandArrived(const QString&)), this, SLOT(on_newcommand_arrived(const QString&)));
+  connect(speechRemote, SIGNAL(newRequestArrived(int)), this, SLOT(on_newrequest_arrived(int)));
 }
 
 void SpeechMe::Update(Subject* subject){
 	switch(msrs->getStatus()){
-		case 0:
+		case Msrs::CONFIGURED:
 		    ui.statusBar->setText("Configured");
 		    break;
-		case 1:
+		case Msrs::READY:
 			ui.statusBar->setText("Ready");
 			break;
-		case 2:
+		case Msrs::LISTENING:
 			ui.statusBar->setText("listening...");
 			break;
-		case 3:
+		case Msrs::PROCESSING:
 			ui.statusBar->setText("processing...");
 			break;
-		case 4:
+		case Msrs::STOPPED:
 			ui.statusBar->setText("Stopped");
 			break;
-		case 99:
+		case Msrs::FAIL:
 			ui.statusBar->setText(strerror(errno));
 			break;
 		default:
@@ -129,7 +129,15 @@ void SpeechMe::on_serverButton_clicked(){
 	
 }
 
-void SpeechMe::on_newcommand_arrived(const QString &command){
-	ui.statusBar->setText(command);
-	
+void SpeechMe::on_newrequest_arrived(int request){
+	switch(request){
+		case ISOLATED_RECOGNITION:
+			msrs->startLiveDecoding(TRUE);
+			break;
+		case CONTINUOUS_RECOGNITION:
+			msrs->startLiveDecoding(FALSE);
+			break;
+		default:
+			break;
+	}
 }
