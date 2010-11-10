@@ -16,18 +16,19 @@
 #include <sphinxbase/cont_ad.h>
 #include <pocketsphinx.h>
 #include <pthread.h>
+#include <iostream>
+
+using namespace std;
 
 Msrs* Msrs::instance=0;
-const int Msrs::READY=1;
-const int Msrs::LISTENING=2;
-const int Msrs::PROCESSING=3;
-const int Msrs::STOPPED=4;
-const int Msrs::FAIL=5;
 
 Msrs::Msrs()
 	{
 	pthread_mutex_init(&m_mutex, NULL);
 	setLiveDecoding(FALSE);
+	setIsolatedDecoding(FALSE);
+	config=NULL;
+	ps=NULL;
 	}
 
 Msrs::~Msrs()
@@ -44,21 +45,35 @@ Msrs* Msrs::getInstance(){
 	return instance;
 }
 
-bool Msrs::setConfig(cmd_ln_t *inout_cmdln, arg_t const *defn, int32 strict, ...){
-//	config = cmd_ln_init(inout_cmdln, defn,strict);
-	config = cmd_ln_init(NULL, cont_args_def, TRUE, "-hmm", "c:/commands/hmm", "-samprate", "11050",
-				"-dict", "c:/commands/commands.dic", "-jsgf", "c:/commands/commands.jsgf", "-latsize", "1000" , NULL);
-	return config!=NULL;
+bool Msrs::setConfig(const char* lm, const char* hmm, const char* dict, const char* samprate){
+	config = cmd_ln_init(NULL, cont_args_def, TRUE, "-hmm", hmm, "-samprate", samprate,
+				"-dict", dict, "-jsgf", lm , NULL);
+	if(config!=NULL){
+		setStatus(CONFIGURED);
+		return true;
+	}else{
+		setStatus(FAIL);
+		return false;
+	}
 }
 
 bool Msrs::initDecoder(){
 	ps = ps_init(config);
-	return ps!=NULL;
+	if(ps!=NULL){
+			setStatus(READY);
+			return true;
+		}else{
+			setStatus(FAIL);
+			return false;
+		}
 }
 
-bool Msrs::startLiveDecoding(){
-	if(!ps)
+bool Msrs::startLiveDecoding(bool isolated){
+	if(ps==NULL){
+		setStatus(FAIL);
 		return FALSE;
+	}
+	setIsolatedDecoding(isolated);
 	if (setjmp(jbuf) == 0) {
 		go();
 	}
@@ -78,6 +93,16 @@ void Msrs::setLiveDecoding(bool decoding){
 
 bool Msrs::isLiveDecoding()const {
 	return liveDecoding;
+}
+
+void Msrs::setIsolatedDecoding(bool isolated){
+	pthread_mutex_lock(&m_mutex);
+	this->isolatedDecoding = isolated;
+	pthread_mutex_unlock(&m_mutex);
+}
+
+bool Msrs::isIsolatedDecoding()const {
+	return isolatedDecoding;
 }
 
 void Msrs::setLastSentence(char const * newSentence){
@@ -106,7 +131,10 @@ void Msrs::sleep_msec(int32 ms)
 }
 
 void Msrs::setStatus(int newStatus){
+	pthread_mutex_lock(&m_mutex);
 	status=newStatus;
+	pthread_mutex_unlock(&m_mutex);
+	
 	Notify();
 }
 
@@ -128,124 +156,128 @@ void Msrs::recognize_from_microphone()
                           (int)cmd_ln_float32_r(config, "-samprate"))) == NULL){
         E_ERROR("Failed top open audio device\n");
         setStatus(FAIL);
-        return;
-    }
-
-    /* Initialize continuous listening module */
-    if ((cont = cont_ad_init(ad, ad_read)) == NULL){
-        E_ERROR("Failed to initialize voice activity detection\n");
+    }else if ((cont = cont_ad_init(ad, ad_read)) == NULL){/* Initialize continuous listening module */
+        E_ERROR("Failed to initialize voice activity detection\n");       
         setStatus(FAIL);
-        return;
-    }
-    if (ad_start_rec(ad) < 0){
+        ad_close(ad);
+    }else if(ad_start_rec(ad) < 0){
+    	cont_ad_close(cont);
+    	ad_close(ad);
         E_ERROR("Failed to start recording\n");
         setStatus(FAIL);
-        return;
-    }
-    if (cont_ad_calib(cont) < 0){
+    }else if (cont_ad_calib(cont) < 0){
+    	cont_ad_close(cont);
+    	ad_close(ad);
         E_ERROR("Failed to calibrate voice activity detection\n");
         setStatus(FAIL);
-        return;
+    }else{
+
+		setLiveDecoding(TRUE);
+		do{
+			/* Indicate listening for next utterance */
+			setStatus(READY);
+	
+			/* Wait data for next utterance */
+			while ((k = cont_ad_read(cont, adbuf, 4096)) == 0 && liveDecoding)
+				sleep_msec(100);
+			if(!liveDecoding){
+				break;
+			}
+	
+			if (k < 0){
+				E_ERROR("Failed to read audio\n");
+				setLiveDecoding(FALSE);
+				setStatus(FAIL);
+				break;
+			}
+	
+			/*
+			 * Non-zero amount of data received; start recognition of new utterance.
+			 * NULL argument to uttproc_begin_utt => automatic generation of utterance-id.
+			 */
+			if (ps_start_utt(ps, NULL) < 0){
+				E_ERROR("Failed to start utterance\n");
+				setStatus(FAIL);
+				break;
+			}
+			ps_process_raw(ps, adbuf, k, FALSE, FALSE);
+			setStatus(LISTENING);
+	
+			/* Note timestamp for this first block of data */
+			ts = cont->read_ts;
+	
+			/* Decode utterance until end (marked by a "long" silence, >1sec) */
+			for (;liveDecoding;) {
+				/* Read non-silence audio data, if any, from continuous listening module */
+				if ((k = cont_ad_read(cont, adbuf, 4096)) < 0){
+					E_ERROR("Failed to read audio\n");
+					setLiveDecoding(FALSE);
+					setStatus(FAIL);
+					break;
+				}
+				if (k == 0) {
+					/*
+					 * No speech data available; check current timestamp with most recent
+					 * speech to see if more than 1 sec elapsed.  If so, end of utterance.
+					 */
+					if ((cont->read_ts - ts) > DEFAULT_SAMPLES_PER_SEC)
+						break;
+				}
+				else {
+					/* New speech data received; note current timestamp */
+					ts = cont->read_ts;
+				}
+	
+				/*
+				 * Decode whatever data was read above.
+				 */
+				rem = ps_process_raw(ps, adbuf, k, FALSE, FALSE);
+	
+				/* If no work to be done, sleep a bit */
+				if ((rem == 0) && (k == 0))
+					sleep_msec(20);
+			}
+			if(!liveDecoding){
+				break;
+			}
+	
+			/*
+			 * Utterance ended; flush any accumulated, unprocessed A/D data and stop
+			 * listening until current utterance completely decoded
+			 */
+			ad_stop_rec(ad);
+			while (ad_read(ad, adbuf, 4096) >= 0 && liveDecoding);
+			if(!liveDecoding){
+				break;
+			}
+			cont_ad_reset(cont);
+			
+			setStatus(PROCESSING);
+	
+			/* Finish decoding, obtain and print result */
+			ps_end_utt(ps);
+			hyp = ps_get_hyp(ps, NULL, &uttid);
+			
+			setLastSentence(hyp);
+			NotifyNewSentece();
+	
+			/* Resume A/D recording for next utterance */
+			if (ad_start_rec(ad) < 0){
+				E_ERROR("Failed to start recording\n");
+				setLiveDecoding(FALSE);
+				setStatus(FAIL);
+				break;//todo: revisar
+			}
+			if(isolatedDecoding){
+				break;
+			}
+		}while(liveDecoding);
+	
+		setStatus(STOPPED);
+		cont_ad_close(cont);
+		ad_close(ad);
+		
     }
-
-    setLiveDecoding(TRUE);
-    for (;liveDecoding;) {
-        /* Indicate listening for next utterance */
-    	setStatus(READY);
-
-        /* Wait data for next utterance */
-        while ((k = cont_ad_read(cont, adbuf, 4096)) == 0 && liveDecoding)
-            sleep_msec(100);
-        if(!liveDecoding){
-        	break;
-        }
-
-        if (k < 0){
-            E_ERROR("Failed to read audio\n");
-            setLiveDecoding(FALSE);
-            setStatus(FAIL);
-            continue;
-        }
-
-        /*
-         * Non-zero amount of data received; start recognition of new utterance.
-         * NULL argument to uttproc_begin_utt => automatic generation of utterance-id.
-         */
-        if (ps_start_utt(ps, NULL) < 0){
-            E_ERROR("Failed to start utterance\n");
-            setStatus(FAIL);
-            continue;
-        }
-        ps_process_raw(ps, adbuf, k, FALSE, FALSE);
-        setStatus(LISTENING);
-
-        /* Note timestamp for this first block of data */
-        ts = cont->read_ts;
-
-        /* Decode utterance until end (marked by a "long" silence, >1sec) */
-        for (;liveDecoding;) {
-            /* Read non-silence audio data, if any, from continuous listening module */
-            if ((k = cont_ad_read(cont, adbuf, 4096)) < 0){
-                E_ERROR("Failed to read audio\n");
-                setLiveDecoding(FALSE);
-                setStatus(FAIL);
-                break;//todo: revisar
-            }
-            if (k == 0) {
-                /*
-                 * No speech data available; check current timestamp with most recent
-                 * speech to see if more than 1 sec elapsed.  If so, end of utterance.
-                 */
-                if ((cont->read_ts - ts) > DEFAULT_SAMPLES_PER_SEC)
-                    break;
-            }
-            else {
-                /* New speech data received; note current timestamp */
-                ts = cont->read_ts;
-            }
-
-            /*
-             * Decode whatever data was read above.
-             */
-            rem = ps_process_raw(ps, adbuf, k, FALSE, FALSE);
-
-            /* If no work to be done, sleep a bit */
-            if ((rem == 0) && (k == 0))
-                sleep_msec(20);
-        }
-
-        /*
-         * Utterance ended; flush any accumulated, unprocessed A/D data and stop
-         * listening until current utterance completely decoded
-         */
-        ad_stop_rec(ad);
-        while (ad_read(ad, adbuf, 4096) >= 0 && liveDecoding);
-        if(!liveDecoding){
-        	break;
-        }
-        cont_ad_reset(cont);
-        
-        setStatus(PROCESSING);
-
-        /* Finish decoding, obtain and print result */
-        ps_end_utt(ps);
-        hyp = ps_get_hyp(ps, NULL, &uttid);
-        
-        setLastSentence(hyp);
-        NotifyNewSentece();
-
-        /* Resume A/D recording for next utterance */
-        if (ad_start_rec(ad) < 0){
-            E_ERROR("Failed to start recording\n");
-            setLiveDecoding(FALSE);
-            setStatus(FAIL);
-            break;//todo: revisar
-        }
-    }
-
-    setStatus(STOPPED);
-    cont_ad_close(cont);
-    ad_close(ad);
 }
 
 void Msrs::sighandler(int signo)

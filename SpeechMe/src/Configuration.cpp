@@ -48,9 +48,7 @@ void Configuration::on_loadButton_clicked(){
 	string dict = ui.dictLineEdit->text().toStdString();
 	
 	if(msrs->setConfig(lm.data(), hmm.data(), dict.data(), "11050")){
-		if(msrs->initDecoder()){
-			msrs->startLiveDecoding();
-		}
+		msrs->initDecoder();
 	}
 			
 }

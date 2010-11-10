@@ -28,7 +28,7 @@ private:
     void closeClient();
     
 signals:
-    void newCommandArrived(const QString &command);
+    void newRequestArrived(int request);
 
 public slots:
 	void newConnectionRequest();

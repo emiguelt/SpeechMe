@@ -9,6 +9,8 @@
 #include <iostream>
 #include <Msrs.h>
 #include <Observer.h>
+#include <errno.h>
+#include <string>
 
 using namespace std;
 
@@ -38,32 +40,38 @@ void DecoderControl::initDecoder(string hmm, string lm, string dict){
 				myview->addSentence("Decoder ready\n");
 			}else{
 				myview->addSentence("Decoder not ready\n");
+				myview->addSentence(strerror(errno));
 			}
 		}else{
 			myview->addSentence("Decoder not initialized\n");
+			myview->addSentence(strerror(errno));
 		}
 	}else{
 		myview->addSentence("Decoder not configured\n");
+		myview->addSentence(strerror(errno));
 	}
 }
 
 void DecoderControl::Update(Subject* subject){
 	switch(msrs->getStatus()){
+		case 0:
+			myview->addSentence("Configured");
+			break;
 		case 1:
-		myview->addSentence("Ready...");
-		break;
+			myview->addSentence("Ready...");
+			break;
 		case 2:
-				myview->addSentence("listening...");
-				break;
+			myview->addSentence("listening...");
+			break;
 		case 3:
-				myview->addSentence("processing...");
-				break;
+			myview->addSentence("processing...");
+			break;
 		case 4:
-				myview->addSentence("stopped...");
-				break;
-		case 5:
-				myview->addSentence("fail...");
-				break;
+			myview->addSentence("stopped");
+			break;
+		case 99:
+			myview->addSentence("fail...");
+			break;
 		default:
 			myview->addSentence("State unknown");
 	}

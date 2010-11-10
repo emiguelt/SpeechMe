@@ -37,4 +37,4 @@ SOURCE ad_s60.cpp
 /*EXPORTUNFROZEN/*comment to release*/
 
 LIBRARY libm.lib libpthread.lib mediaclientaudioinputstream.lib
-CAPABILITY AllFiles MultimediaDD UserEnvironment
+CAPABILITY UserEnvironment
