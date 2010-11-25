@@ -28,8 +28,11 @@ public:
     virtual void Update(Subject* subject);
     virtual void UpdateSentence(Subject* subject);
     
-    static const int ISOLATED_RECOGNITION=1;
-    static const int CONTINUOUS_RECOGNITION=2;
+    static const int CMD_ISOLATED_RECOGNITION=1;
+    static const int CMD_CONTINUOUS_RECOGNITION=2;
+    static const int CMD_REGISTER_CLIENT=3;
+    static const int CMD_REMOVE_CLIENT=4;
+    
 
 private:
     Ui::SpeechMe ui;

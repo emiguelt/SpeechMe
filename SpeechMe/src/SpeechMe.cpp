@@ -64,6 +64,7 @@ void SpeechMe::createConnections(){
   connect(configAction, SIGNAL(triggered()),this , SLOT(on_configAction_triggered()));
   connect(testAction, SIGNAL(triggered()),this , SLOT(on_testAction_triggered()));
   connect(conf, SIGNAL(serverButton_clicked()), this, SLOT(on_serverButton_clicked()));
+  connect(conf, SIGNAL(decoder_configured(bool)), speechPad, SLOT(on_decoder_configured(bool)));
   connect(speechRemote, SIGNAL(newRequestArrived(int)), this, SLOT(on_newrequest_arrived(int)));
 }
 
@@ -131,11 +132,17 @@ void SpeechMe::on_serverButton_clicked(){
 
 void SpeechMe::on_newrequest_arrived(int request){
 	switch(request){
-		case ISOLATED_RECOGNITION:
+		case CMD_ISOLATED_RECOGNITION:
 			msrs->startLiveDecoding(TRUE);
 			break;
-		case CONTINUOUS_RECOGNITION:
+		case CMD_CONTINUOUS_RECOGNITION:
 			msrs->startLiveDecoding(FALSE);
+			break;
+		case CMD_REGISTER_CLIENT:
+			speechRemote->registerClient();
+			break;
+		case CMD_REMOVE_CLIENT:
+			speechRemote->removeClient();
 			break;
 		default:
 			break;

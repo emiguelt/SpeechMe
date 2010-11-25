@@ -15,7 +15,7 @@ using namespace std;
 Configuration::Configuration(QWidget *parent)
 	: QWidget(parent)
 	{
-	ui.setupUi(this);
+        ui.setupUi(this);
 	}
 
 Configuration::~Configuration()
@@ -23,37 +23,32 @@ Configuration::~Configuration()
 	// TODO Auto-generated destructor stub
 	}
 
-void Configuration::on_hmmButton_clicked(){
+void Configuration::on_langButton_clicked(){
 	QFileDialog* qfd = new QFileDialog;
-	ui.hmmLineEdit->setText(qfd->getExistingDirectory(this, "Hmm folder", "c:\\", QFileDialog::ShowDirsOnly));
-	delete qfd;
-}
-void Configuration::on_lmButton_clicked(){
-	QFileDialog* qfd = new QFileDialog;
-	ui.lmLineEdit->setText(qfd->getOpenFileName(this, "LM file", "c:\\", "*"));
-	delete qfd;
-}
-void Configuration::on_dictButton_clicked(){
-	QFileDialog* qfd = new QFileDialog;
-	ui.dictLineEdit->setText(qfd->getOpenFileName(this, "Dict file", "c:\\", "*"));
+        ui.languageFolder->setText(qfd->getExistingDirectory(this, tr("Language folder"), "c:\\", QFileDialog::ShowDirsOnly));
 	delete qfd;
 }
 
 void Configuration::on_loadButton_clicked(){
-	if(msrs==NULL){
-		return;
-	}
-	string hmm = ui.hmmLineEdit->text().toStdString();
-	string lm = ui.lmLineEdit->text().toStdString();
-	string dict = ui.dictLineEdit->text().toStdString();
+  if(msrs==NULL){
+    return;
+  }
+
+  string hmm = (ui.languageFolder->text() + "/hmm").toStdString();
+  string lm;
+  if(ui.jsgf->isChecked()){
+    lm = (ui.languageFolder->text() + "/lm.jsgf").toStdString();
+      }else{
+        lm = (ui.languageFolder->text() + "/lm.dmp").toStdString();
+      }
+        string dict = (ui.languageFolder->text() + "/dict.dic").toStdString();
 	
-	if(msrs->setConfig(lm.data(), hmm.data(), dict.data(), "11050")){
-		msrs->initDecoder();
-	}
-			
+        if(msrs->setConfig(lm.data(), hmm.data(), dict.data(), "11050", ui.jsgf->isChecked())){
+          emit decoder_configured(msrs->initDecoder());
+	}		
 }
-void Configuration::on_restoreButton_clicked(){
-	//TODO restore configuration
+void Configuration::on_testButton_clicked(){
+        msrs->startLiveDecoding(true);
 }
 
 void Configuration::setMsrs(Msrs* msrs){

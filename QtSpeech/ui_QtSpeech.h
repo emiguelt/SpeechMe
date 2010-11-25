@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'QtSpeech.ui'
 **
-** Created: Tue 2. Nov 09:50:10 2010
+** Created: Wed 24. Nov 17:57:05 2010
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

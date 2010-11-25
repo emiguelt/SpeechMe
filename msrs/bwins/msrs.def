@@ -85,8 +85,9 @@ EXPORTS
 	?CONFIGURED@Msrs@@2HB @ 84 NONAME ABSENT ; int const Msrs::CONFIGURED
 	?instance@Msrs@@1PAV1@A @ 85 NONAME ; class Msrs * Msrs::instance
 	?setConfig@Msrs@@QAE_NV?$basic_string@DV?$char_traits@D@std@@V?$allocator@D@2@@std@@000@Z @ 86 NONAME ABSENT ; bool Msrs::setConfig(class std::basic_string<char, class std::char_traits<char>, class std::allocator<char> >, class std::basic_string<char, class std::char_traits<char>, class std::allocator<char> >, class std::basic_string<char, class std::char_traits<char>, class std::allocator<char> >, class std::basic_string<char, class std::char_traits<char>, class std::allocator<char> >)
-	?setConfig@Msrs@@QAE_NPBD000@Z @ 87 NONAME ; bool Msrs::setConfig(char const *, char const *, char const *, char const *)
+	?setConfig@Msrs@@QAE_NPBD000@Z @ 87 NONAME ABSENT ; bool Msrs::setConfig(char const *, char const *, char const *, char const *)
 	?isIsolatedDecoding@Msrs@@QBE_NXZ @ 88 NONAME ; bool Msrs::isIsolatedDecoding(void) const
 	?setIsolatedDecoding@Msrs@@QAEX_N@Z @ 89 NONAME ; void Msrs::setIsolatedDecoding(bool)
 	?startLiveDecoding@Msrs@@QAE_N_N@Z @ 90 NONAME ; bool Msrs::startLiveDecoding(bool)
+	?setConfig@Msrs@@QAE_NPBD000_N@Z @ 91 NONAME ; bool Msrs::setConfig(char const *, char const *, char const *, char const *, bool)
 

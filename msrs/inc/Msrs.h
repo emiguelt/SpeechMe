@@ -63,7 +63,7 @@ protected:
 public:
 	static Msrs *getInstance();
 	static void *start_thread(void *obj);
-	bool setConfig(const char* lm, const char* hmm, const char* dict, const char* samprate);
+	bool setConfig(const char* lm, const char* hmm, const char* dict, const char* samprate, bool isJsgf);
     bool initDecoder();
     bool startLiveDecoding(bool isolated);
     void stopLiveDecoding();

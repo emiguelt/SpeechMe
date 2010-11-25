@@ -45,9 +45,13 @@ Msrs* Msrs::getInstance(){
 	return instance;
 }
 
-bool Msrs::setConfig(const char* lm, const char* hmm, const char* dict, const char* samprate){
+bool Msrs::setConfig(const char* lm, const char* hmm, const char* dict, const char* samprate, bool isJsgf){
+	char *lmopt = "-jsgf";
+	if(!isJsgf){
+		lmopt = "-lm";
+	}
 	config = cmd_ln_init(NULL, cont_args_def, TRUE, "-hmm", hmm, "-samprate", samprate,
-				"-dict", dict, "-jsgf", lm , NULL);
+				"-dict", dict, lmopt, lm , NULL);
 	if(config!=NULL){
 		setStatus(CONFIGURED);
 		return true;
@@ -60,7 +64,7 @@ bool Msrs::setConfig(const char* lm, const char* hmm, const char* dict, const ch
 bool Msrs::initDecoder(){
 	ps = ps_init(config);
 	if(ps!=NULL){
-			setStatus(READY);
+			setStatus(CONFIGURED);
 			return true;
 		}else{
 			setStatus(FAIL);
@@ -72,6 +76,9 @@ bool Msrs::startLiveDecoding(bool isolated){
 	if(ps==NULL){
 		setStatus(FAIL);
 		return FALSE;
+	}
+	if(isLiveDecoding()){
+		return true;
 	}
 	setIsolatedDecoding(isolated);
 	if (setjmp(jbuf) == 0) {
@@ -273,6 +280,7 @@ void Msrs::recognize_from_microphone()
 			}
 		}while(liveDecoding);
 	
+		setLiveDecoding(FALSE);
 		setStatus(STOPPED);
 		cont_ad_close(cont);
 		ad_close(ad);
