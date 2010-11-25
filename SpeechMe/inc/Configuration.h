@@ -27,15 +27,14 @@ public:
 	void setServerRunning(bool opt);
 	
 public slots:
-	void on_hmmButton_clicked();
-	void on_lmButton_clicked();
-	void on_dictButton_clicked();
+        void on_langButton_clicked();
 	void on_loadButton_clicked();
-	void on_restoreButton_clicked();
+        void on_testButton_clicked();
 	void on_serverButton_clicked();
 	
 signals:
 	void serverButton_clicked();
+        void decoder_configured(bool status);
 	};
 
 #endif /* CONFIGURATION_H_ */

@@ -4,8 +4,10 @@
 #include <QObject>
 #include <QtNetwork/qtcpserver.h>
 #include <QtNetwork/qtcpsocket.h>
+#include <QTextStream>
 #include <Observer.h>
 #include <Msrs.h>
+#include "RemoteClient.h"
 
 class SpeechRemote : public QObject, Observer
 {
@@ -19,16 +21,23 @@ public:
     void stopServer();
     bool isRunning();
     void setMsrs(Msrs* msrs);
+    void registerClient();
+    void removeClient();
     
 private:
     QTcpServer* server;
     Msrs* msrs;
-    QTcpSocket* client;
+    RemoteClient* client;
+    const char* sentence;
     
     void closeClient();
     
+private slots:
+    void on_newSentenceReady();
+    
 signals:
     void newRequestArrived(int request);
+    void newSentenceReady();
 
 public slots:
 	void newConnectionRequest();

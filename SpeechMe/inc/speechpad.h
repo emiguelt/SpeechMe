@@ -23,6 +23,13 @@ public:
 private:
     Ui::SpeechPad *ui;
     Msrs* msrs;
+
+    void updateContButton();
+
+  public slots:
+    void on_decoder_configured(bool status);
+    void on_isolatedButton_clicked();
+    void on_contButton_clicked();
 };
 
 #endif // SPEECHPAD_H

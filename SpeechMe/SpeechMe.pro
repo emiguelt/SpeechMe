@@ -8,13 +8,15 @@ QT        += core \
 HEADERS   += inc/SpeechMe.h \
     inc/Configuration.h \
     inc/speechpad.h \
-    inc/speechremote.h
+    inc/speechremote.h \
+    inc/RemoteClient.h
 SOURCES   += src/SpeechMe_reg.rss \
     src/main.cpp \
     src/SpeechMe.cpp \
     src/Configuration.cpp \
     src/speechpad.cpp \
-    src/speechremote.cpp
+    src/speechremote.cpp \
+    src/RemoteClient.cpp
 FORMS	  += ui/SpeechMe.ui \
     ui/config.ui \
     ui/speechpad.ui

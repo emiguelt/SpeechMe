@@ -15,19 +15,26 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Decoder</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Hmm folder</string>
+        <string>Lang. folder</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="hmmLineEdit"/>
+      <widget class="QLineEdit" name="languageFolder"/>
      </item>
      <item>
-      <widget class="QPushButton" name="hmmButton">
+      <widget class="QPushButton" name="langButton">
        <property name="text">
         <string>...</string>
        </property>
@@ -40,38 +47,17 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Lang. Model</string>
+        <string>JSGF?</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lmLineEdit"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="lmButton">
+      <widget class="QCheckBox" name="jsgf">
        <property name="text">
-        <string>...</string>
+        <string/>
        </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Dictionary</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="dictLineEdit"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="dictButton">
-       <property name="text">
-        <string>...</string>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -83,13 +69,6 @@
       <widget class="QPushButton" name="loadButton">
        <property name="text">
         <string>Ok</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="cancelButton">
-       <property name="text">
-        <string>Cancel</string>
        </property>
       </widget>
      </item>
@@ -156,14 +135,9 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>hmmLineEdit</tabstop>
-  <tabstop>hmmButton</tabstop>
-  <tabstop>lmLineEdit</tabstop>
-  <tabstop>lmButton</tabstop>
-  <tabstop>dictLineEdit</tabstop>
-  <tabstop>dictButton</tabstop>
+  <tabstop>languageFolder</tabstop>
+  <tabstop>langButton</tabstop>
   <tabstop>loadButton</tabstop>
-  <tabstop>cancelButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>
