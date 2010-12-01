@@ -29,6 +29,7 @@ Msrs::Msrs()
 	setIsolatedDecoding(FALSE);
 	config=NULL;
 	ps=NULL;
+	tempClient=NULL;
 	}
 
 Msrs::~Msrs()
@@ -78,7 +79,7 @@ bool Msrs::startLiveDecoding(bool isolated){
 		return FALSE;
 	}
 	if(isLiveDecoding()){
-		return true;
+		return FALSE;
 	}
 	setIsolatedDecoding(isolated);
 	if (setjmp(jbuf) == 0) {
@@ -285,6 +286,10 @@ void Msrs::recognize_from_microphone()
 		cont_ad_close(cont);
 		ad_close(ad);
 		
+		if(tempClient!=NULL){
+			Detach(tempClient);
+			tempClient=NULL;
+		}
     }
 }
 
@@ -300,5 +305,12 @@ void Msrs::go(){
 
 void* Msrs::start_thread(void *obj){
 	reinterpret_cast<Msrs *>(obj)->recognize_from_microphone();
+}
+
+void Msrs::setTempClient(Observer* client){
+	if(!isLiveDecoding()){
+		tempClient = client;
+		Attach(tempClient);
+	}
 }
 

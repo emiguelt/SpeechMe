@@ -48,12 +48,13 @@ private:
     void setMainWidget(QWidget* widget);
     void initExtraUi();
     void createConnections();
-    
+    void initDecoding(RemoteClient * client, bool opt);
 public slots:
 	void on_configAction_triggered();
     void on_testAction_triggered();
     void on_serverButton_clicked();
-    void on_newrequest_arrived(int request);
+    void on_newrequest_arrived(RemoteClient* client, int request);
+    void on_registerClient(RemoteClient* client);
 };
 
 #endif // SPEECHME_H

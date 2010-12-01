@@ -90,4 +90,5 @@ EXPORTS
 	?setIsolatedDecoding@Msrs@@QAEX_N@Z @ 89 NONAME ; void Msrs::setIsolatedDecoding(bool)
 	?startLiveDecoding@Msrs@@QAE_N_N@Z @ 90 NONAME ; bool Msrs::startLiveDecoding(bool)
 	?setConfig@Msrs@@QAE_NPBD000_N@Z @ 91 NONAME ; bool Msrs::setConfig(char const *, char const *, char const *, char const *, bool)
+	?setTempClient@Msrs@@QAEXPAVObserver@@@Z @ 92 NONAME ; void Msrs::setTempClient(class Observer *)
 
