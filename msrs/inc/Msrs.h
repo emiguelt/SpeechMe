@@ -54,6 +54,7 @@ protected:
 	int status;
 	pthread_t m_thread;
 	pthread_mutex_t m_mutex;
+	Observer* tempClient;
 	
 	void setStatus(int newStatus);
 	void sleep_msec(int32 ms);
@@ -75,6 +76,7 @@ public:
     void setLastSentence(char const* newSentence);
     int getStatus();
     void go();
+    void setTempClient(Observer* client);
     virtual ~Msrs();
     
     //static variables

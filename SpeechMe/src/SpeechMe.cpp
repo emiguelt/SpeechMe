@@ -65,7 +65,7 @@ void SpeechMe::createConnections(){
   connect(testAction, SIGNAL(triggered()),this , SLOT(on_testAction_triggered()));
   connect(conf, SIGNAL(serverButton_clicked()), this, SLOT(on_serverButton_clicked()));
   connect(conf, SIGNAL(decoder_configured(bool)), speechPad, SLOT(on_decoder_configured(bool)));
-  connect(speechRemote, SIGNAL(newRequestArrived(int)), this, SLOT(on_newrequest_arrived(int)));
+  connect(speechRemote, SIGNAL(registerClient(RemoteClient*)), this, SLOT(on_registerClient(RemoteClient*)));
 }
 
 void SpeechMe::Update(Subject* subject){
@@ -130,21 +130,35 @@ void SpeechMe::on_serverButton_clicked(){
 	
 }
 
-void SpeechMe::on_newrequest_arrived(int request){
+void SpeechMe::initDecoding(RemoteClient * client, bool opt)
+{
+	if(!msrs->isLiveDecoding()){
+		msrs->setTempClient(client);
+		msrs->startLiveDecoding(opt);
+	}else{
+		client->decoderBusy();
+	}
+}
+
+void SpeechMe::on_newrequest_arrived(RemoteClient* client, int request){
 	switch(request){
 		case CMD_ISOLATED_RECOGNITION:
-			msrs->startLiveDecoding(TRUE);
+			initDecoding(client, TRUE);
 			break;
 		case CMD_CONTINUOUS_RECOGNITION:
-			msrs->startLiveDecoding(FALSE);
+			initDecoding(client, FALSE);
 			break;
 		case CMD_REGISTER_CLIENT:
-			speechRemote->registerClient();
 			break;
 		case CMD_REMOVE_CLIENT:
-			speechRemote->removeClient();
+			speechRemote->removeClient((RemoteClient*)(client));
 			break;
 		default:
 			break;
 	}
+}
+
+void SpeechMe::on_registerClient(RemoteClient* client){
+	connect(client, SIGNAL(newRequestArrived(RemoteClient*, int)), this, SLOT(on_newrequest_arrived(RemoteClient*, int)));
+	client->registerClient();
 }
