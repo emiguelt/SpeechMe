@@ -10,30 +10,27 @@
 #include "SpeechMe.h"
 #include <errno.h>
 #include <string>
-#include <QtGui/QBoxLayout>
+#include "speechpad.h"
+#include "speechweb.h"
+#include "ConfigUi.h"
 
 
-SpeechMe::SpeechMe(QWidget *parent)
-    : QWidget(parent)
+SpeechMe::SpeechMe(QMainWindow *parent)
+    : QMainWindow(parent)
 {
 	ui.setupUi(this);
 	msrs = Msrs::getInstance();
 	msrs->Attach(this);
-	initExtraUi();
-	conf = new Configuration(this);
-	conf->hide();
-	conf->setMsrs(msrs);
+	//initExtraUi();
+	conf = new Configuration();
 	
-	speechPad = new SpeechPad(conf);
-	speechPad->hide();
-	speechPad->setMsrs(msrs);
 	
 	speechRemote = new SpeechRemote(this);
-	speechRemote->setMsrs(msrs);
 	
-	currentWidget = NULL;
 	createConnections();
 	
+	decoderConfigured = false;
+
 	on_configAction_triggered();
 
 }
@@ -44,54 +41,45 @@ SpeechMe::~SpeechMe()
 	delete msrs;
 }
 
-void SpeechMe::initExtraUi(){
-	centralLayout = new QVBoxLayout(ui.mainWidget);
-
-  setContextMenuPolicy(Qt::NoContextMenu);
-
-  configAction = new QAction(tr("Config"), this);
-  configAction->setSoftKeyRole(QAction::PositiveSoftKey);
-
-  testAction = new QAction(tr("Test"), this);
-  testAction->setSoftKeyRole(QAction::PositiveSoftKey);
-
-  addAction(configAction);
-  addAction(testAction);
-
-}
-
 void SpeechMe::createConnections(){
-  connect(configAction, SIGNAL(triggered()),this , SLOT(on_configAction_triggered()));
-  connect(testAction, SIGNAL(triggered()),this , SLOT(on_testAction_triggered()));
-  connect(conf, SIGNAL(serverButton_clicked()), this, SLOT(on_serverButton_clicked()));
-  connect(conf, SIGNAL(decoder_configured(bool)), speechPad, SLOT(on_decoder_configured(bool)));
+  connect(ui.actionConfig, SIGNAL(triggered()),this , SLOT(on_configAction_triggered()));
+  connect(ui.actionSpeechPad, SIGNAL(triggered()),this , SLOT(on_testAction_triggered()));
+  connect(ui.actionSpeechWeb, SIGNAL(triggered()), this, SLOT(on_webAction_triggered()));
+  connect(this, SIGNAL(newStatusMessage(const QString &)), ui.statusbar, SLOT(showMessage(const QString &)));
   connect(speechRemote, SIGNAL(registerClient(RemoteClient*)), this, SLOT(on_registerClient(RemoteClient*)));
 }
 
 void SpeechMe::Update(Subject* subject){
+	QString* status;
 	switch(msrs->getStatus()){
+
 		case Msrs::CONFIGURED:
-		    ui.statusBar->setText("Configured");
+			status = new QString(tr("Configured"));
+		    break;
+		case Msrs::INITIALIZED:
+			status = new QString(tr("Initialized"));
+			decoderConfigured = true;
 		    break;
 		case Msrs::READY:
-			ui.statusBar->setText("Ready");
+			status = new QString(tr("Ready"));
 			break;
 		case Msrs::LISTENING:
-			ui.statusBar->setText("listening...");
+			status = new QString(tr("Listening"));
 			break;
 		case Msrs::PROCESSING:
-			ui.statusBar->setText("processing...");
+			status = new QString(tr("Processing..."));
 			break;
 		case Msrs::STOPPED:
-			ui.statusBar->setText("Stopped");
+			status = new QString(tr("Stopped"));
 			break;
 		case Msrs::FAIL:
-			ui.statusBar->setText(strerror(errno));
+			status = new QString(tr(strerror(errno)));
 			break;
 		default:
-			ui.statusBar->setText("State unknown");
+			status = new QString(tr("State unknown"));
 			break;
 		}
+	emit newStatusMessage(*status);
 }
 
 void SpeechMe::UpdateSentence(Subject* subject){
@@ -99,35 +87,35 @@ void SpeechMe::UpdateSentence(Subject* subject){
 //	ui.statusBar->setText(*sent);
 }
 
-void SpeechMe::setMainWidget(QWidget* widget){
-	if(currentWidget!=NULL){
-		currentWidget->hide();
-		centralLayout->removeWidget(currentWidget);
-	}
-	centralLayout->addWidget(widget);
-	currentWidget = widget;
-	currentWidget->show();
-}
+
 void SpeechMe::on_configAction_triggered(){
-	setMainWidget(conf);
-	configAction->setVisible(false);
-	testAction->setVisible(true);
+	configui = new ConfigUi(this, conf);
+	setCentralWidget(configui);
 }
 
 void SpeechMe::on_testAction_triggered(){
-	setMainWidget(speechPad);
-	configAction->setVisible(true);
-	testAction->setVisible(false);
+	speechPad = new SpeechPad(this);
+	setCentralWidget(speechPad);
 }
+
+void SpeechMe::on_webAction_triggered(){
+	speechWeb = new SpeechWeb(this);
+	setCentralWidget(speechWeb);
+}
+
+
 
 void SpeechMe::on_serverButton_clicked(){
 	if(speechRemote->isRunning()){
 		speechRemote->stopServer();
-		conf->setServerRunning(FALSE);
+		configui->setServerRunning(FALSE);
 	}else{
-		conf->setServerRunning(speechRemote->startServer(conf->getServerPort()));
+		configui->setServerRunning(speechRemote->startServer(conf->getServerPort()));
 	}
-	
+}
+
+bool SpeechMe::isSpeechRemoteRunning(){
+	return speechRemote->isRunning();
 }
 
 void SpeechMe::initDecoding(RemoteClient * client, bool opt)
@@ -161,4 +149,26 @@ void SpeechMe::on_newrequest_arrived(RemoteClient* client, int request){
 void SpeechMe::on_registerClient(RemoteClient* client){
 	connect(client, SIGNAL(newRequestArrived(RemoteClient*, int)), this, SLOT(on_newrequest_arrived(RemoteClient*, int)));
 	client->registerClient();
+}
+
+void SpeechMe::initLocalDecoding(bool opt){
+	if(!msrs->isLiveDecoding()){
+		msrs->startLiveDecoding(opt);
+	}
+}
+
+bool SpeechMe::isLiveDecoding(){
+	return msrs->isLiveDecoding();
+}
+
+void SpeechMe::stopLiveDecoding(){
+	msrs->stopLiveDecoding();
+}
+
+bool SpeechMe::isDecoderConfigured(){
+	return decoderConfigured;
+}
+
+void SpeechMe::on_decoder_configured(bool status){
+	decoderConfigured = status;
 }

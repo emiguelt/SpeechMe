@@ -1,73 +1,48 @@
 /*
  * Configuration.cpp
  *
- *  Created on: 1/11/2010
+ *  Created on: 6/12/2010
  *      Author: Edwin Miguel
  */
 
 #include "Configuration.h"
-#include <qfiledialog.h>
-#include <iostream>
-#include <QtGui/QMainWindow>
 
-using namespace std;
-
-Configuration::Configuration(QWidget *parent)
-	: QWidget(parent)
+Configuration::Configuration()
 	{
-        ui.setupUi(this);
+	folder = "";
+	jsgfModel = true;
+	serverPort= 10000;
 	}
 
 Configuration::~Configuration()
 	{
-	// TODO Auto-generated destructor stub
 	}
 
-void Configuration::on_langButton_clicked(){
-	QFileDialog* qfd = new QFileDialog;
-        ui.languageFolder->setText(qfd->getExistingDirectory(this, tr("Language folder"), "c:\\", QFileDialog::ShowDirsOnly));
-	delete qfd;
+string Configuration::getFolder(){
+    return folder;
 }
 
-void Configuration::on_loadButton_clicked(){
-  if(msrs==NULL){
-    return;
-  }
+bool Configuration::isJsgfModel() const
+    {
+        return jsgfModel;
+    }
 
-  string hmm = (ui.languageFolder->text() + "/hmm").toStdString();
-  string lm;
-  if(ui.jsgf->isChecked()){
-    lm = (ui.languageFolder->text() + "/lm.jsgf").toStdString();
-      }else{
-        lm = (ui.languageFolder->text() + "/lm.dmp").toStdString();
-      }
-        string dict = (ui.languageFolder->text() + "/dict.dic").toStdString();
-	
-        if(msrs->setConfig(lm.data(), hmm.data(), dict.data(), "11050", ui.jsgf->isChecked())){
-          emit decoder_configured(msrs->initDecoder());
-	}		
-}
-void Configuration::on_testButton_clicked(){
-        msrs->startLiveDecoding(true);
-}
+int Configuration::getServerPort() const
+    {
+        return serverPort;
+    }
 
-void Configuration::setMsrs(Msrs* msrs){
-	this->msrs=msrs;
-}
+void Configuration::setFolder(string folder)
+    {
+        this->folder = folder;
+    }
 
-int Configuration::getServerPort(){
-	return ui.portSphinBox->value();
-}
+void Configuration::setJsgfModel(bool jsgfModel)
+    {
+        this->jsgfModel = jsgfModel;
+    }
 
-void Configuration::setServerRunning(bool opt){
-	if(opt){
-		ui.serverButton->setText(tr("Stop server"));
-	}else{
-		ui.serverButton->setText(tr("Start server"));
-	}
-	ui.portSphinBox->setEnabled(!opt);
-}
-
-void Configuration::on_serverButton_clicked(){
-	emit serverButton_clicked();
-}
+void Configuration::setServerPort(int serverPort)
+    {
+        this->serverPort = serverPort;
+    }

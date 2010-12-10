@@ -10,23 +10,35 @@
 #ifndef SPEECHME_H
 #define SPEECHME_H
 
-#include <QtGui/QWidget>
+#include <qmainwindow.h>
 #include <Msrs.h>
 #include <Observer.h>
 #include "Configuration.h"
-#include "speechpad.h"
-#include "ui_SpeechMe.h"
+#include "ui_SpeechMe2.h"
 #include "speechremote.h"
 
-class SpeechMe : public QWidget,  public Observer
+namespace Ui {
+    class SpeechMe2;
+}
+
+class SpeechPad;
+class SpeechWeb;
+class ConfigUi;
+
+class SpeechMe : public QMainWindow,  public Observer
 {
     Q_OBJECT
 
 public:
-	SpeechMe(QWidget *parent = 0);
+	SpeechMe(QMainWindow *parent = 0);
     ~SpeechMe();
     virtual void Update(Subject* subject);
     virtual void UpdateSentence(Subject* subject);
+    void initLocalDecoding(bool opt);
+    void stopLiveDecoding();
+    bool isLiveDecoding();
+    bool isDecoderConfigured();
+    bool isSpeechRemoteRunning();
     
     static const int CMD_ISOLATED_RECOGNITION=1;
     static const int CMD_CONTINUOUS_RECOGNITION=2;
@@ -35,26 +47,29 @@ public:
     
 
 private:
-    Ui::SpeechMe ui;
+    Ui::SpeechMe2 ui;
     Configuration* conf;
+    ConfigUi* configui;
     SpeechPad* speechPad;
+    SpeechWeb* speechWeb;
     SpeechRemote* speechRemote;
-    QAction* configAction;
-    QAction* testAction;
-    QWidget* currentWidget;
-    QVBoxLayout* centralLayout;
     Msrs* msrs;
+    bool decoderConfigured;
     
-    void setMainWidget(QWidget* widget);
-    void initExtraUi();
+    //void initExtraUi();
     void createConnections();
     void initDecoding(RemoteClient * client, bool opt);
 public slots:
 	void on_configAction_triggered();
     void on_testAction_triggered();
+    void on_webAction_triggered();
     void on_serverButton_clicked();
     void on_newrequest_arrived(RemoteClient* client, int request);
     void on_registerClient(RemoteClient* client);
+    void on_decoder_configured(bool status);
+    
+signals:
+    void newStatusMessage(const QString &);
 };
 
 #endif // SPEECHME_H

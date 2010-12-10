@@ -2,8 +2,8 @@
 #define SPEECHPAD_H
 
 #include <QWidget>
-#include <Msrs.h>
 #include <Observer.h>
+#include "SpeechMe.h"
 
 namespace Ui {
     class SpeechPad;
@@ -16,15 +16,16 @@ class SpeechPad : public QWidget, public Observer
 public:
     explicit SpeechPad(QWidget *parent = 0);
     ~SpeechPad();
-    void setMsrs(Msrs* msrs);
     virtual void Update(Subject* subject);
     virtual void UpdateSentence(Subject* subject);
 
 private:
     Ui::SpeechPad *ui;
-    Msrs* msrs;
+    SpeechMe* speechMe;
+    bool localDecoding;
 
     void updateContButton();
+    void decode(bool isolated);
 
   public slots:
     void on_decoder_configured(bool status);

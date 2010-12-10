@@ -65,7 +65,7 @@ bool Msrs::setConfig(const char* lm, const char* hmm, const char* dict, const ch
 bool Msrs::initDecoder(){
 	ps = ps_init(config);
 	if(ps!=NULL){
-			setStatus(CONFIGURED);
+			setStatus(INITIALIZED);
 			return true;
 		}else{
 			setStatus(FAIL);
