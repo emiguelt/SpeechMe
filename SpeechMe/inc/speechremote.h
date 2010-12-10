@@ -20,12 +20,10 @@ public:
     bool startServer(int port);
     void stopServer();
     bool isRunning();
-    void setMsrs(Msrs* msrs);
     void removeClient(RemoteClient* client);
     
 private:
     QTcpServer* server;
-    Msrs* msrs;
     QList<RemoteClient*> remClients;
     
     void closeClients();

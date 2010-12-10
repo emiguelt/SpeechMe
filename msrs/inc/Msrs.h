@@ -80,11 +80,12 @@ public:
     virtual ~Msrs();
     
     //static variables
-    static const int CONFIGURED=0;
-	static const int READY=1;
-	static const int LISTENING=2;
-	static const int PROCESSING=3;
-	static const int STOPPED=4;
+    static const int INITIALIZED=0;
+    static const int CONFIGURED=1;
+	static const int READY=2;
+	static const int LISTENING=3;
+	static const int PROCESSING=4;
+	static const int STOPPED=5;
 	static const int FAIL=99;
 };
 

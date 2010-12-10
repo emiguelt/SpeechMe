@@ -10,6 +10,7 @@ SpeechRemote::SpeechRemote(QObject *parent) :
 {
 	server = new QTcpServer(this);
 	connect(server, SIGNAL(newConnection()), this, SLOT(newConnectionRequest()));
+	Msrs::getInstance()->Attach(this);
 }
 
 SpeechRemote::~SpeechRemote(){
@@ -60,11 +61,6 @@ void SpeechRemote::closeClients(){
 
 bool SpeechRemote::isRunning(){
 	return server->isListening();
-}
-
-void SpeechRemote::setMsrs(Msrs* msrs){
-	this->msrs=msrs;
-	msrs->Attach(this);
 }
 
 void SpeechRemote::removeClient(RemoteClient* client){
