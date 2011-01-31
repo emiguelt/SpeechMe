@@ -32,6 +32,11 @@ int Configuration::getServerPort() const
         return serverPort;
     }
 
+int Configuration::getSampRate() const
+    {
+        return samprate;
+    }
+
 void Configuration::setFolder(string folder)
     {
         this->folder = folder;
@@ -45,4 +50,9 @@ void Configuration::setJsgfModel(bool jsgfModel)
 void Configuration::setServerPort(int serverPort)
     {
         this->serverPort = serverPort;
+    }
+
+void Configuration::setSampRate(int samprate)
+    {
+        this->samprate = samprate;
     }

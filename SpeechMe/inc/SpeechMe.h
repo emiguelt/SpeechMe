@@ -63,6 +63,7 @@ public slots:
 	void on_configAction_triggered();
     void on_testAction_triggered();
     void on_webAction_triggered();
+    void on_hideAction_triggered();
     void on_serverButton_clicked();
     void on_newrequest_arrived(RemoteClient* client, int request);
     void on_registerClient(RemoteClient* client);

@@ -16,6 +16,7 @@ Subject::Subject()
 
 Subject::~Subject()
 	{
+	_observers.clear();
 	}
 
 void Subject::Attach (Observer* o) { 

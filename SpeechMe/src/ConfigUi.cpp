@@ -35,6 +35,7 @@ ConfigUi::~ConfigUi(){
 	conf->setFolder(folder);
 	conf->setJsgfModel(ui.jsgf->isChecked());
 	conf->setServerPort(ui.portSphinBox->value());
+	conf->setSampRate((ui.sampRateCombo->currentText()).toInt());
 }
 
 void ConfigUi::on_langButton_clicked(){
@@ -47,12 +48,14 @@ void ConfigUi::on_loadButton_clicked(){
   if(msrs==NULL){
     return;
   }
+  ui.loadButton->setEnabled(FALSE);
 
   string folder = ui.languageFolder->text().toStdString();
   conf->setFolder(folder.data());
   conf->setJsgfModel(ui.jsgf->isChecked());
   
   string hmm = (ui.languageFolder->text() + "/hmm").toStdString();
+  string samprate = (ui.sampRateCombo->currentText()).toStdString();
   string lm;
   if(ui.jsgf->isChecked()){
     lm = (ui.languageFolder->text() + "/lm.jsgf").toStdString();
@@ -61,9 +64,10 @@ void ConfigUi::on_loadButton_clicked(){
       }
         string dict = (ui.languageFolder->text() + "/dict.dic").toStdString();
 	
-        if(msrs->setConfig(lm.data(), hmm.data(), dict.data(), "11050", ui.jsgf->isChecked())){
+        if(msrs->setConfig(lm.data(), hmm.data(), dict.data(), samprate.data(), ui.jsgf->isChecked())){
           emit decoder_configured(msrs->initDecoder());
-	}		
+	}
+        ui.loadButton->setEnabled(TRUE);
 }
 void ConfigUi::on_testButton_clicked(){
         msrs->startLiveDecoding(true);

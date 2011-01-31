@@ -26,11 +26,20 @@ private:
 
     void updateContButton();
     void decode(bool isolated);
+    void enableButtons(bool opt);
 
   public slots:
     void on_decoder_configured(bool status);
     void on_isolatedButton_clicked();
     void on_contButton_clicked();
+    
+  private slots:
+  	void on_new_sentence_ready(const QString*);
+  	void on_update_decoder_status(bool status);
+  	
+  signals:
+  	void newSentenceReady(const QString*);
+  	void updateDecoderStatus(bool status);
 };
 
 #endif // SPEECHPAD_H

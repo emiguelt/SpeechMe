@@ -29,9 +29,11 @@ public slots:
     
 private slots:
     void on_sentence_arrived(const char * sentence);
+    void on_update_decoder_status(bool status);
     
 signals:
 	void sentenceArrived(const char * sentence);
+	void updateDecoderStatus(bool status);
 };
 
 #endif // SPEECHWEB_H

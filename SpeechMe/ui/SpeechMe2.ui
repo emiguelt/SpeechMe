@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Speech me!</string>
   </property>
   <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
@@ -30,6 +30,7 @@
     <addaction name="actionConfig"/>
     <addaction name="actionSpeechPad"/>
     <addaction name="actionSpeechWeb"/>
+    <addaction name="actionHide"/>
    </widget>
    <addaction name="menuMenu"/>
   </widget>
@@ -47,6 +48,11 @@
   <action name="actionSpeechWeb">
    <property name="text">
     <string>SpeechWeb</string>
+   </property>
+  </action>
+  <action name="actionHide">
+   <property name="text">
+    <string>Hide</string>
    </property>
   </action>
  </widget>

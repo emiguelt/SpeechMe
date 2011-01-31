@@ -29,10 +29,8 @@ RemoteClient::RemoteClient(QObject *parent) :
 	connect(this, SIGNAL(newSentenceReady(const char*)), SLOT(on_newSentenceReady(const char*)), Qt::BlockingQueuedConnection);
 	}
 
-RemoteClient::~RemoteClient()
-	{
-	// TODO close any client
-	}
+RemoteClient::~RemoteClient(){
+}
 
 
 void RemoteClient::setSocket(QTcpSocket* socket){
@@ -45,7 +43,8 @@ void RemoteClient::setSocket(QTcpSocket* socket){
 void RemoteClient::close(){
 	registered = false;
 	sendmsg(RemoteClient::RSP_CMD_REM_OK);
-//	socket->close();
+	socket->disconnect(SIGNAL(readyRead()));
+    socket->close();
 //	delete stream;
 //	delete socket;
 //	stream = NULL;

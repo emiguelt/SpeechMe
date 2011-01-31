@@ -14,7 +14,7 @@ SpeechRemote::SpeechRemote(QObject *parent) :
 }
 
 SpeechRemote::~SpeechRemote(){
-//	msrs->Detach(this);
+	Msrs::getInstance()->Detach(this);
 //	delete server;
 }
 
@@ -56,7 +56,11 @@ void SpeechRemote::stopServer(){
 }
 
 void SpeechRemote::closeClients(){
-	//todo client->close();
+	RemoteClient* client;
+	while(!remClients.isEmpty()){
+		client = remClients.first();
+		removeClient(client);
+	}
 }
 
 bool SpeechRemote::isRunning(){
@@ -67,6 +71,5 @@ void SpeechRemote::removeClient(RemoteClient* client){
 	remClients.removeOne(client);
 	client->close();
 //	client->disconnect();
-//	delete client;
 }
 
