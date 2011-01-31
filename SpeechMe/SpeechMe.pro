@@ -22,12 +22,11 @@ SOURCES   += src/SpeechMe_reg.rss \
     src/speechremote.cpp \
     src/RemoteClient.cpp \
     src/speechweb.cpp
-FORMS	  += ui/SpeechMe.ui \
-    ui/config.ui \
+FORMS	  += ui/config.ui \
     ui/speechpad.ui \
     ui/speechweb.ui \
     ui/SpeechMe2.ui
-RESOURCES +=
+RESOURCES += 
 
 INCLUDEPATH += C:/sphinx/pocketsphinx/include \
     C:/sphinx/sphinxbase/include/s60 \
@@ -38,7 +37,7 @@ RESOURCES +=
 symbian{
 TARGET.UID3 = 0xEE74B26E
 TARGET.EPOCSTACKSIZE = 0x14000
-TARGET.EPOCHEAPSIZE = 0x020000 0x1000000 
+TARGET.EPOCHEAPSIZE = 0x020000 0x2000000 
 TARGET.CAPABILITY = "UserEnvironment"
 LIBS += -lsphinxbase -lpocketsphinx -lmsrs
 myfiles.sources = sphinxbase.dll pocketsphinx.dll msrs.dll

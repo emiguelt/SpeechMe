@@ -12,31 +12,48 @@ SpeechPad::SpeechPad(QWidget *parent) :
     localDecoding = false;
     
     on_decoder_configured(speechMe->isDecoderConfigured());
-    
+    connect(this, SIGNAL(newSentenceReady(const QString*)), this, SLOT(on_new_sentence_ready(const QString*)), Qt::BlockingQueuedConnection);
+    connect(this, SIGNAL(updateDecoderStatus(bool)), this, SLOT(on_update_decoder_status(bool)), Qt::BlockingQueuedConnection);
 }
 
 SpeechPad::~SpeechPad()
 {
 	Msrs::getInstance()->Detach(this);
-    delete ui;
+    //delete ui;
 }
 
 void SpeechPad::Update(Subject* subject){
+	switch(Msrs::getInstance()->getStatus()){
+		case Msrs::STOPPED:
+			emit updateDecoderStatus(TRUE);
+			break;
+		case Msrs::FAIL:
+			emit updateDecoderStatus(TRUE);
+			break;	
+	}
+}
+
+void SpeechPad::on_update_decoder_status(bool status){
+	enableButtons(status);
 }
 
 void SpeechPad::UpdateSentence(Subject* subject){
-	QString sent(Msrs::getInstance()->getLastSentence());
-	ui->textSP->appendPlainText(sent);
+	const QString sent(Msrs::getInstance()->getLastSentence());
+	emit newSentenceReady(&sent);
+}
+
+void SpeechPad::on_new_sentence_ready(const QString* stce){
+	ui->textSP->appendPlainText(*stce);
 	ui->textSP->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
 }
 
 void SpeechPad::on_decoder_configured(bool status){
-  ui->isolatedButton->setEnabled(status);
-  ui->contButton->setEnabled(status);
+  enableButtons(status);
 }
 
 void SpeechPad::on_isolatedButton_clicked(){
-  decode(true);
+	enableButtons(FALSE);
+	decode(true);
 }
 
 void SpeechPad::on_contButton_clicked(){
@@ -45,6 +62,7 @@ void SpeechPad::on_contButton_clicked(){
 }
 
 void SpeechPad::updateContButton(){
+	enableButtons(FALSE);
   if(speechMe->isLiveDecoding()){
     ui->contButton->setText(tr("Stop decoding"));
   }else{
@@ -62,4 +80,8 @@ void SpeechPad::decode(bool isolated){
 	  }
 }
 
+void SpeechPad::enableButtons(bool opt){
+	ui->isolatedButton->setEnabled(opt);
+	ui->contButton->setEnabled(opt);
+}
 

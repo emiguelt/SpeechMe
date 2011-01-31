@@ -35,7 +35,9 @@ Msrs::Msrs()
 Msrs::~Msrs()
 	{
 	pthread_mutex_destroy(&m_mutex);
-	// TODO free resources
+	if(ps!=NULL){
+		ps_free(ps);
+	}
 	}
 
 //Singleton pattern for Msrs class
@@ -47,6 +49,10 @@ Msrs* Msrs::getInstance(){
 }
 
 bool Msrs::setConfig(const char* lm, const char* hmm, const char* dict, const char* samprate, bool isJsgf){
+	if(ps!=NULL){
+		ps_free(ps);
+		ps =  NULL;
+	}
 	char *lmopt = "-jsgf";
 	if(!isJsgf){
 		lmopt = "-lm";
@@ -63,6 +69,10 @@ bool Msrs::setConfig(const char* lm, const char* hmm, const char* dict, const ch
 }
 
 bool Msrs::initDecoder(){
+	if(ps!=NULL){
+			ps_free(ps);
+			ps =  NULL;
+		}
 	ps = ps_init(config);
 	if(ps!=NULL){
 			setStatus(INITIALIZED);
@@ -159,27 +169,34 @@ void Msrs::recognize_from_microphone()
     char const *uttid;
     cont_ad_t *cont;
     char word[256];
+    setStatus(22);
 
     if ((ad = ad_open_dev(cmd_ln_str_r(config, "-adcdev"),
                           (int)cmd_ln_float32_r(config, "-samprate"))) == NULL){
         E_ERROR("Failed top open audio device\n");
         setStatus(FAIL);
-    }else if ((cont = cont_ad_init(ad, ad_read)) == NULL){/* Initialize continuous listening module */
+    }else{
+    	setStatus(23);
+    	if ((cont = cont_ad_init(ad, ad_read)) == NULL){/* Initialize continuous listening module */
         E_ERROR("Failed to initialize voice activity detection\n");       
         setStatus(FAIL);
         ad_close(ad);
-    }else if(ad_start_rec(ad) < 0){
+    	}else{
+    	setStatus(24);
+    	if(ad_start_rec(ad) < 0){
     	cont_ad_close(cont);
     	ad_close(ad);
         E_ERROR("Failed to start recording\n");
         setStatus(FAIL);
-    }else if (cont_ad_calib(cont) < 0){
+    	}else{
+    	setStatus(25);
+    	if (cont_ad_calib(cont) < 0){
     	cont_ad_close(cont);
     	ad_close(ad);
         E_ERROR("Failed to calibrate voice activity detection\n");
         setStatus(FAIL);
-    }else{
-
+    	}else{
+    	setStatus(21);
 		setLiveDecoding(TRUE);
 		do{
 			/* Indicate listening for next utterance */
@@ -291,6 +308,7 @@ void Msrs::recognize_from_microphone()
 			tempClient=NULL;
 		}
     }
+    	}}}
 }
 
 void Msrs::sighandler(int signo)
@@ -299,12 +317,16 @@ void Msrs::sighandler(int signo)
 }
 
 void Msrs::go(){
-	pthread_create(&m_thread,0,Msrs::start_thread,(void*)this);
+	setStatus(20);
+	pthread_create(&m_thread,NULL,Msrs::start_thread,(void*)this);
 }
 
 
 void* Msrs::start_thread(void *obj){
-	reinterpret_cast<Msrs *>(obj)->recognize_from_microphone();
+	Msrs::getInstance()->setStatus(27);
+	Msrs::getInstance()->recognize_from_microphone();
+	Msrs::getInstance()->setStatus(30);
+//	reinterpret_cast<Msrs *>(obj)->recognize_from_microphone();
 }
 
 void Msrs::setTempClient(Observer* client){

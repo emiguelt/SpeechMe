@@ -23,8 +23,7 @@ SpeechMe::SpeechMe(QMainWindow *parent)
 	msrs->Attach(this);
 	//initExtraUi();
 	conf = new Configuration();
-	
-	
+
 	speechRemote = new SpeechRemote(this);
 	
 	createConnections();
@@ -38,13 +37,14 @@ SpeechMe::SpeechMe(QMainWindow *parent)
 SpeechMe::~SpeechMe()
 {
 	msrs->Detach(this);
-	delete msrs;
+	//delete msrs;
 }
 
 void SpeechMe::createConnections(){
   connect(ui.actionConfig, SIGNAL(triggered()),this , SLOT(on_configAction_triggered()));
   connect(ui.actionSpeechPad, SIGNAL(triggered()),this , SLOT(on_testAction_triggered()));
   connect(ui.actionSpeechWeb, SIGNAL(triggered()), this, SLOT(on_webAction_triggered()));
+  connect(ui.actionHide, SIGNAL(triggered()), this, SLOT(on_hideAction_triggered()));
   connect(this, SIGNAL(newStatusMessage(const QString &)), ui.statusbar, SLOT(showMessage(const QString &)));
   connect(speechRemote, SIGNAL(registerClient(RemoteClient*)), this, SLOT(on_registerClient(RemoteClient*)));
 }
@@ -70,13 +70,14 @@ void SpeechMe::Update(Subject* subject){
 			status = new QString(tr("Processing..."));
 			break;
 		case Msrs::STOPPED:
-			status = new QString(tr("Stopped"));
+			status = new QString(tr("Stopped - Decoder free"));
 			break;
 		case Msrs::FAIL:
 			status = new QString(tr(strerror(errno)));
 			break;
 		default:
-			status = new QString(tr("State unknown"));
+			status = new QString(tr("State unknown - "));
+			status->append(QString::number(msrs->getStatus()));
 			break;
 		}
 	emit newStatusMessage(*status);
@@ -120,11 +121,13 @@ bool SpeechMe::isSpeechRemoteRunning(){
 
 void SpeechMe::initDecoding(RemoteClient * client, bool opt)
 {
+    emit newStatusMessage(tr("Init decoding..."));
 	if(!msrs->isLiveDecoding()){
 		msrs->setTempClient(client);
 		msrs->startLiveDecoding(opt);
 	}else{
 		client->decoderBusy();
+		emit newStatusMessage(tr("Decoder busy"));
 	}
 }
 
@@ -139,7 +142,7 @@ void SpeechMe::on_newrequest_arrived(RemoteClient* client, int request){
 		case CMD_REGISTER_CLIENT:
 			break;
 		case CMD_REMOVE_CLIENT:
-			speechRemote->removeClient((RemoteClient*)(client));
+			speechRemote->removeClient(client);
 			break;
 		default:
 			break;
@@ -152,6 +155,7 @@ void SpeechMe::on_registerClient(RemoteClient* client){
 }
 
 void SpeechMe::initLocalDecoding(bool opt){
+	emit newStatusMessage(tr("Local decoding..."));
 	if(!msrs->isLiveDecoding()){
 		msrs->startLiveDecoding(opt);
 	}
@@ -171,4 +175,8 @@ bool SpeechMe::isDecoderConfigured(){
 
 void SpeechMe::on_decoder_configured(bool status){
 	decoderConfigured = status;
+}
+
+void SpeechMe::on_hideAction_triggered(){
+ this->showMinimized();
 }

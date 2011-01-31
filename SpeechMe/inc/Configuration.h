@@ -19,15 +19,18 @@ private:
 	string folder;
 	bool jsgfModel;
 	int serverPort;
+	int samprate;
 public:
 	Configuration();
 	virtual ~Configuration();
 	string getFolder();
     bool isJsgfModel() const;
     int getServerPort() const;
+    int getSampRate() const;
     void setFolder(string folder);
     void setJsgfModel(bool jsgfModel);
     void setServerPort(int serverPort);
+    void setSampRate(int samprate);
 
 };
 
