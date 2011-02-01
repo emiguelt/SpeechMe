@@ -12,7 +12,8 @@ HEADERS   += inc/SpeechMe.h \
     inc/speechpad.h \
     inc/speechremote.h \
     inc/RemoteClient.h \
-    inc/speechweb.h
+    inc/speechweb.h \
+    inc/decoderthread.h
 SOURCES   += src/SpeechMe_reg.rss \
     src/main.cpp \
     src/SpeechMe.cpp \
@@ -21,7 +22,8 @@ SOURCES   += src/SpeechMe_reg.rss \
     src/speechpad.cpp \
     src/speechremote.cpp \
     src/RemoteClient.cpp \
-    src/speechweb.cpp
+    src/speechweb.cpp \
+    src/decoderthread.cpp
 FORMS	  += ui/config.ui \
     ui/speechpad.ui \
     ui/speechweb.ui \

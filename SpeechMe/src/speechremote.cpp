@@ -6,25 +6,15 @@
 #include <qabstractsocket.h>
 
 SpeechRemote::SpeechRemote(QObject *parent) :
-    QObject(parent), Observer()
+    QObject(parent)
 {
 	server = new QTcpServer(this);
 	connect(server, SIGNAL(newConnection()), this, SLOT(newConnectionRequest()));
-	Msrs::getInstance()->Attach(this);
 }
 
 SpeechRemote::~SpeechRemote(){
-	Msrs::getInstance()->Detach(this);
 //	delete server;
 }
-
-void SpeechRemote::Update(Subject* subject){	
-}
-
-void SpeechRemote::UpdateSentence(Subject* subject){
-}
-
-
 
 void SpeechRemote::newConnectionRequest(){
 	QTcpSocket* newClient = server->nextPendingConnection();

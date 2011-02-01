@@ -53,7 +53,9 @@ protected:
 	char const *lastSentence;
 	int status;
 	pthread_t m_thread;
-	pthread_mutex_t m_mutex;
+	pthread_mutex_t m_mutexSt;
+	pthread_mutex_t m_mutexLd;
+	pthread_mutex_t m_mutexId;
 	Observer* tempClient;
 	
 	void setStatus(int newStatus);

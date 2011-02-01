@@ -13,6 +13,7 @@
 #include "speechpad.h"
 #include "speechweb.h"
 #include "ConfigUi.h"
+#include "decoderthread.h"
 
 
 SpeechMe::SpeechMe(QMainWindow *parent)
@@ -44,15 +45,21 @@ void SpeechMe::createConnections(){
   connect(ui.actionConfig, SIGNAL(triggered()),this , SLOT(on_configAction_triggered()));
   connect(ui.actionSpeechPad, SIGNAL(triggered()),this , SLOT(on_testAction_triggered()));
   connect(ui.actionSpeechWeb, SIGNAL(triggered()), this, SLOT(on_webAction_triggered()));
-  connect(ui.actionHide, SIGNAL(triggered()), this, SLOT(on_hideAction_triggered()));
   connect(this, SIGNAL(newStatusMessage(const QString &)), ui.statusbar, SLOT(showMessage(const QString &)));
   connect(speechRemote, SIGNAL(registerClient(RemoteClient*)), this, SLOT(on_registerClient(RemoteClient*)));
+  connect(this, SIGNAL(decoderStatusUpdated(int)), this, SLOT(on_updated_decoder_status(int)));
 }
 
 void SpeechMe::Update(Subject* subject){
+	emit decoderStatusUpdated(msrs->getStatus());
+}
+
+void SpeechMe::UpdateSentence(Subject* subject){
+}
+
+void SpeechMe::on_updated_decoder_status(int statusNumber){
 	QString* status;
 	switch(msrs->getStatus()){
-
 		case Msrs::CONFIGURED:
 			status = new QString(tr("Configured"));
 		    break;
@@ -79,13 +86,8 @@ void SpeechMe::Update(Subject* subject){
 			status = new QString(tr("State unknown - "));
 			status->append(QString::number(msrs->getStatus()));
 			break;
-		}
+	}
 	emit newStatusMessage(*status);
-}
-
-void SpeechMe::UpdateSentence(Subject* subject){
-//	const QString* sent = new QString(msrs->getLastSentence());
-//	ui.statusBar->setText(*sent);
 }
 
 
@@ -155,9 +157,12 @@ void SpeechMe::on_registerClient(RemoteClient* client){
 }
 
 void SpeechMe::initLocalDecoding(bool opt){
+  DecoderThread* decThread = new DecoderThread();
 	emit newStatusMessage(tr("Local decoding..."));
 	if(!msrs->isLiveDecoding()){
-		msrs->startLiveDecoding(opt);
+      decThread->setIsolated(opt);
+      decThread->start();
+//		msrs->startLiveDecoding(opt);
 	}
 }
 
