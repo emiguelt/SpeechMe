@@ -5,18 +5,15 @@
 #include <QtNetwork/qtcpserver.h>
 #include <QtNetwork/qtcpsocket.h>
 #include <QTextStream>
-#include <Msrs.h>
 #include "RemoteClient.h"
 #include <QList>
 
-class SpeechRemote : public QObject, Observer
+class SpeechRemote : public QObject
 {
     Q_OBJECT
 public:
     explicit SpeechRemote(QObject *parent = 0);
     ~SpeechRemote();
-    virtual void Update(Subject *subject);
-    virtual void UpdateSentence(Subject *subject);
     bool startServer(int port);
     void stopServer();
     bool isRunning();

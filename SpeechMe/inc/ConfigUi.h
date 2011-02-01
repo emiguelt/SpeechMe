@@ -14,29 +14,28 @@
 //#include "Configuration.h"
 
 class ConfigUi: public QWidget
-	{
-	Q_OBJECT
+{
+  Q_OBJECT
 private:
-	Ui::ConfigUi ui;
-	SpeechMe* speechMe;
-	Msrs* msrs;
-	Configuration* conf;
+  Ui::ConfigUi ui;
+  SpeechMe* speechMe;
+  Msrs* msrs;
+  Configuration* conf;
 
 public:
-	ConfigUi(QWidget *parent, Configuration* conf);
-	virtual ~ConfigUi();
-	int getServerPort();
-	void setServerRunning(bool opt);
-	
+  ConfigUi(QWidget *parent, Configuration* conf);
+  virtual ~ConfigUi();
+  int getServerPort();
+  void setServerRunning(bool opt);
+
 public slots:
-    void on_langButton_clicked();
-	void on_loadButton_clicked();
-    void on_testButton_clicked();
-	void on_serverButton_clicked();
-	
+  void on_langButton_clicked();
+  void on_loadButton_clicked();
+  void on_serverButton_clicked();
+
 signals:
-	void serverButton_clicked();
-    void decoder_configured(bool status);
-	};
+  void serverButton_clicked();
+  void decoder_configured(bool status);
+};
 
 #endif /* CONFIGUI_H_ */

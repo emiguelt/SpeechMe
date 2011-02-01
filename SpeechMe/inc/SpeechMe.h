@@ -69,8 +69,12 @@ public slots:
     void on_registerClient(RemoteClient* client);
     void on_decoder_configured(bool status);
     
+private slots:
+    void on_updated_decoder_status(int statusNumber);
+    
 signals:
     void newStatusMessage(const QString &);
+    void decoderStatusUpdated(int);
 };
 
 #endif // SPEECHME_H
