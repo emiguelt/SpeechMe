@@ -123,10 +123,12 @@ bool SpeechMe::isSpeechRemoteRunning(){
 
 void SpeechMe::initDecoding(RemoteClient * client, bool opt)
 {
-    emit newStatusMessage(tr("Init decoding..."));
+	DecoderThread* decThread = new DecoderThread();
+	emit newStatusMessage(tr("Init decoding..."));
 	if(!msrs->isLiveDecoding()){
 		msrs->setTempClient(client);
-		msrs->startLiveDecoding(opt);
+	    decThread->setIsolated(opt);
+	   decThread->start();
 	}else{
 		client->decoderBusy();
 		emit newStatusMessage(tr("Decoder busy"));
@@ -157,7 +159,7 @@ void SpeechMe::on_registerClient(RemoteClient* client){
 }
 
 void SpeechMe::initLocalDecoding(bool opt){
-  DecoderThread* decThread = new DecoderThread();
+   DecoderThread* decThread = new DecoderThread();
 	emit newStatusMessage(tr("Local decoding..."));
 	if(!msrs->isLiveDecoding()){
       decThread->setIsolated(opt);

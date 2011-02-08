@@ -13,7 +13,7 @@ SpeechPad::SpeechPad(QWidget *parent) :
     
     on_decoder_configured(speechMe->isDecoderConfigured());
     connect(this, SIGNAL(newSentenceReady(const QString*)), this, SLOT(on_new_sentence_ready(const QString*)), Qt::BlockingQueuedConnection);
-    connect(this, SIGNAL(updateDecoderStatus(bool)), this, SLOT(on_update_decoder_status(bool)), Qt::BlockingQueuedConnection);
+    connect(this, SIGNAL(updateDecoderStatus(bool)), this, SLOT(on_update_decoder_status(bool)), Qt::AutoConnection);
 }
 
 SpeechPad::~SpeechPad()
