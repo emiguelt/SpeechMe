@@ -26,7 +26,7 @@ RemoteClient::RemoteClient(QObject *parent) :
 	socket = NULL;
 	stream = NULL;
 	registered = false;
-	connect(this, SIGNAL(newSentenceReady(const char*)), SLOT(on_newSentenceReady(const char*)), Qt::BlockingQueuedConnection);
+	connect(this, SIGNAL(newSentenceReady(const char*)), SLOT(on_newSentenceReady(const char*)), Qt::AutoConnection);
 	}
 
 RemoteClient::~RemoteClient(){

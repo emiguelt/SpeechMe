@@ -17,6 +17,7 @@
 #include <pocketsphinx.h>
 #include <pthread.h>
 #include <iostream>
+//#include <fstream>
 
 using namespace std;
 
@@ -61,8 +62,14 @@ bool Msrs::setConfig(const char* lm, const char* hmm, const char* dict, const ch
 	if(!isJsgf){
 		lmopt = "-lm";
 	}
+	
+	//ofstream logfile;
+	//logfile.open ("logfile.txt");
+	//logfile.close();
+
+	
 	config = cmd_ln_init(NULL, cont_args_def, TRUE, "-hmm", hmm, "-samprate", samprate,
-			"-dict", dict, lmopt, lm , NULL);
+			"-dict", dict, lmopt, lm, "-logfn", "E://logfile.txt", NULL);
 	if(config!=NULL){
 		setStatus(CONFIGURED);
 		return true;
@@ -179,27 +186,27 @@ void Msrs::recognize_from_microphone()
 		E_ERROR("Failed top open audio device\n");
 		setStatus(FAIL);
 	}else{
-		setStatus(23);
+		//setStatus(23);
 		if ((cont = cont_ad_init(ad, ad_read)) == NULL){/* Initialize continuous listening module */
 			E_ERROR("Failed to initialize voice activity detection\n");       
 			setStatus(FAIL);
 			ad_close(ad);
 		}else{
-			setStatus(24);
+			//setStatus(24);
 			if(ad_start_rec(ad) < 0){
 				cont_ad_close(cont);
 				ad_close(ad);
 				E_ERROR("Failed to start recording\n");
 				setStatus(FAIL);
 			}else{
-				setStatus(25);
+				//setStatus(25);
 				if (cont_ad_calib(cont) < 0){
 					cont_ad_close(cont);
 					ad_close(ad);
 					E_ERROR("Failed to calibrate voice activity detection\n");
 					setStatus(FAIL);
 				}else{
-					setStatus(21);
+					//setStatus(21);
 					setLiveDecoding(TRUE);
 					do{
 						/* Indicate listening for next utterance */
@@ -320,16 +327,16 @@ void Msrs::sighandler(int signo)
 	}
 
 void Msrs::go(){
-	setStatus(20);
+	//setStatus(20);
 	recognize_from_microphone();
 	//pthread_create(&m_thread,NULL,Msrs::start_thread,(void*)this);
 }
 
 
 void* Msrs::start_thread(void *obj){
-	Msrs::getInstance()->setStatus(27);
+	//Msrs::getInstance()->setStatus(27);
 	Msrs::getInstance()->recognize_from_microphone();
-	Msrs::getInstance()->setStatus(30);
+	//Msrs::getInstance()->setStatus(30);
 	//	reinterpret_cast<Msrs *>(obj)->recognize_from_microphone();
 }
 
