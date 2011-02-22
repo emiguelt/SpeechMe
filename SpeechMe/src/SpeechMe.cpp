@@ -14,6 +14,7 @@
 #include "speechweb.h"
 #include "ConfigUi.h"
 #include "decoderthread.h"
+#include <QMessageBox>
 
 
 SpeechMe::SpeechMe(QMainWindow *parent)
@@ -94,16 +95,26 @@ void SpeechMe::on_updated_decoder_status(int statusNumber){
 void SpeechMe::on_configAction_triggered(){
 	configui = new ConfigUi(this, conf);
 	setCentralWidget(configui);
+	updateMenu(ui.actionConfig);
 }
 
 void SpeechMe::on_testAction_triggered(){
 	speechPad = new SpeechPad(this);
 	setCentralWidget(speechPad);
+	updateMenu(ui.actionSpeechPad);
 }
 
 void SpeechMe::on_webAction_triggered(){
 	speechWeb = new SpeechWeb(this);
 	setCentralWidget(speechWeb);
+	updateMenu(ui.actionSpeechWeb);
+}
+
+void SpeechMe::updateMenu(QAction * menuOpt){
+	ui.actionConfig->setEnabled(true);
+	ui.actionSpeechPad->setEnabled(true);
+	ui.actionSpeechWeb->setEnabled(true);
+	menuOpt->setEnabled(false);
 }
 
 
@@ -113,7 +124,12 @@ void SpeechMe::on_serverButton_clicked(){
 		speechRemote->stopServer();
 		configui->setServerRunning(FALSE);
 	}else{
-		configui->setServerRunning(speechRemote->startServer(conf->getServerPort()));
+            if(speechRemote->startServer(conf->getServerPort())){
+                configui->setServerRunning(TRUE);
+            }else{
+                QMessageBox::critical(this, "Speech server", tr("Unable to start server - %1").arg(speechRemote->getServerError()));
+                configui->setServerRunning(FALSE);
+            }
 	}
 }
 
@@ -142,11 +158,6 @@ void SpeechMe::on_newrequest_arrived(RemoteClient* client, int request){
 			break;
 		case CMD_CONTINUOUS_RECOGNITION:
 			initDecoding(client, FALSE);
-			break;
-		case CMD_REGISTER_CLIENT:
-			break;
-		case CMD_REMOVE_CLIENT:
-			speechRemote->removeClient(client);
 			break;
 		default:
 			break;

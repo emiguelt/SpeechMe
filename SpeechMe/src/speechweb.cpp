@@ -12,7 +12,7 @@ SpeechWeb::SpeechWeb(QWidget *parent) :
     Msrs::getInstance()->Attach(this);
     connect(this, SIGNAL(sentenceArrived(const char *)), 
     		this, SLOT(on_sentence_arrived(const char *)), Qt::BlockingQueuedConnection);
-    connect(this, SIGNAL(updateDecoderStatus(bool)), this, SLOT(on_update_decoder_status(bool)), Qt::AutoConnection);
+    connect(this, SIGNAL(updateDecoderStatus(bool)), this, SLOT(on_update_decoder_status(bool)));
 }
 
 SpeechWeb::~SpeechWeb()

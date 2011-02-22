@@ -19,10 +19,14 @@ SpeechRemote::~SpeechRemote(){
 void SpeechRemote::newConnectionRequest(){
 	QTcpSocket* newClient = server->nextPendingConnection();
 	RemoteClient* client = new RemoteClient(this);
+	connect(client, SIGNAL(clientUnregistered(RemoteClient *)), this, SLOT(on_registered_client(RemoteClient *)));
 	remClients.append(client);
 	client->setSocket(newClient);
 	emit registerClient(client);
-	
+}
+
+QString SpeechRemote::getServerError(){
+    return server->errorString();
 }
 
 bool SpeechRemote::startServer(int port){
@@ -33,7 +37,7 @@ bool SpeechRemote::startServer(int port){
 			return FALSE;
 		}
 	}else{
-		return server->listen(QHostAddress::LocalHost, port);
+            return (server->listen(QHostAddress::LocalHost, port));
 	}
 	
 }
@@ -46,10 +50,11 @@ void SpeechRemote::stopServer(){
 }
 
 void SpeechRemote::closeClients(){
-	RemoteClient* client;
-	while(!remClients.isEmpty()){
-		client = remClients.first();
-		removeClient(client);
+	int i;
+	RemoteClient * client;
+	for(i = 0;  i < remClients.size(); i++){
+		client = remClients.at(i);
+		client->close();
 	}
 }
 
@@ -57,9 +62,7 @@ bool SpeechRemote::isRunning(){
 	return server->isListening();
 }
 
-void SpeechRemote::removeClient(RemoteClient* client){
+void SpeechRemote::on_unregistered_client(RemoteClient * client){
 	remClients.removeOne(client);
-	client->close();
-//	client->disconnect();
 }
 

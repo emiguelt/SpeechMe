@@ -17,7 +17,6 @@
 #include <pocketsphinx.h>
 #include <pthread.h>
 #include <iostream>
-//#include <fstream>
 
 using namespace std;
 
@@ -63,13 +62,8 @@ bool Msrs::setConfig(const char* lm, const char* hmm, const char* dict, const ch
 		lmopt = "-lm";
 	}
 	
-	//ofstream logfile;
-	//logfile.open ("logfile.txt");
-	//logfile.close();
-
-	
 	config = cmd_ln_init(NULL, cont_args_def, TRUE, "-hmm", hmm, "-samprate", samprate,
-			"-dict", dict, lmopt, lm, "-logfn", "E://logfile.txt", NULL);
+			"-dict", dict, lmopt, lm, "-logfn", "C://speechme.log", "-rawlogdir", "C://raw", NULL);
 	if(config!=NULL){
 		setStatus(CONFIGURED);
 		return true;

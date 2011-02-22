@@ -26,7 +26,7 @@ RemoteClient::RemoteClient(QObject *parent) :
 	socket = NULL;
 	stream = NULL;
 	registered = false;
-	connect(this, SIGNAL(newSentenceReady(const char*)), SLOT(on_newSentenceReady(const char*)), Qt::AutoConnection);
+	connect(this, SIGNAL(newSentenceReady(const char*)), SLOT(on_newSentenceReady(const char*)), Qt::BlockingQueuedConnection);
 	}
 
 RemoteClient::~RemoteClient(){
@@ -38,17 +38,18 @@ void RemoteClient::setSocket(QTcpSocket* socket){
 	stream = new QTextStream(socket);
 	socket->setSocketOption(QAbstractSocket::KeepAliveOption, QVariant(1));
 	connect(this->socket, SIGNAL(readyRead()), this, SLOT(dataReadytoRead()));
+	connect(this->socket, SIGNAL(disconnected()), this, SLOT(on_disconnected()));
 }
 
 void RemoteClient::close(){
-	registered = false;
 	sendmsg(RemoteClient::RSP_CMD_REM_OK);
 	socket->disconnect(SIGNAL(readyRead()));
     socket->close();
-//	delete stream;
-//	delete socket;
-//	stream = NULL;
-//	stream = NULL;
+}
+
+void RemoteClient::on_disconnected(){
+	registered = false;
+	emit clientUnregistered(this);
 }
 
 void RemoteClient::sendmsg(const char * message){

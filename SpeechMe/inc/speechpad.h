@@ -24,7 +24,7 @@ private:
     SpeechMe* speechMe;
     bool localDecoding;
 
-    void updateContButton();
+    void updateContButton(bool opt);
     void decode(bool isolated);
     void enableButtons(bool opt);
 

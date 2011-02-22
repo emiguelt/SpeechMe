@@ -13,7 +13,7 @@ SpeechPad::SpeechPad(QWidget *parent) :
     
     on_decoder_configured(speechMe->isDecoderConfigured());
     connect(this, SIGNAL(newSentenceReady(const QString*)), this, SLOT(on_new_sentence_ready(const QString*)), Qt::BlockingQueuedConnection);
-    connect(this, SIGNAL(updateDecoderStatus(bool)), this, SLOT(on_update_decoder_status(bool)), Qt::AutoConnection);
+    connect(this, SIGNAL(updateDecoderStatus(bool)), this, SLOT(on_update_decoder_status(bool)));
 }
 
 SpeechPad::~SpeechPad()
@@ -57,17 +57,17 @@ void SpeechPad::on_isolatedButton_clicked(){
 }
 
 void SpeechPad::on_contButton_clicked(){
-  decode(false);
-  updateContButton();
+	updateContButton(!speechMe->isLiveDecoding());
+	decode(false);
 }
 
-void SpeechPad::updateContButton(){
-	enableButtons(FALSE);
-  if(speechMe->isLiveDecoding()){
+void SpeechPad::updateContButton(bool opt){
+  if(opt){
     ui->contButton->setText(tr("Stop decoding"));
   }else{
     ui->contButton->setText(tr("Continuous"));
   }
+  ui->isolatedButton->setEnabled(!opt);
 }
 
 void SpeechPad::decode(bool isolated){

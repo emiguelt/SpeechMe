@@ -24,6 +24,7 @@ ConfigUi::ConfigUi(QWidget *parent, Configuration* conf)
   ui.languageFolder->setText(folder);
   ui.jsgf->setChecked(conf->isJsgfModel());
   ui.portSphinBox->setValue(conf->getServerPort());
+  ui.sampRateCombo->setCurrentIndex(conf->getSampRateIndex());
   setServerRunning(speechMe->isSpeechRemoteRunning());
 
   connect(this, SIGNAL(serverButton_clicked()), parent, SLOT(on_serverButton_clicked()));
@@ -36,6 +37,7 @@ ConfigUi::~ConfigUi(){
   conf->setJsgfModel(ui.jsgf->isChecked());
   conf->setServerPort(ui.portSphinBox->value());
   conf->setSampRate((ui.sampRateCombo->currentText()).toInt());
+  conf->setSampRateIndex(ui.sampRateCombo->currentIndex());
 }
 
 void ConfigUi::on_langButton_clicked(){
@@ -66,7 +68,6 @@ void ConfigUi::on_loadButton_clicked(){
   string dict = (ui.languageFolder->text() + "/dict.dic").toStdString();
 
   if(msrs->setConfig(lm.data(), hmm.data(), dict.data(), samprate.data(), ui.jsgf->isChecked())){
-//    emit decoder_configured(msrs->initDecoder());
     msrs->initDecoder();
   }
   ui.loadButton->setEnabled(TRUE);
