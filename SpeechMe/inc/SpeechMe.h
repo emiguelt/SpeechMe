@@ -59,6 +59,7 @@ private:
     //void initExtraUi();
     void createConnections();
     void initDecoding(RemoteClient * client, bool opt);
+    void updateMenu(QAction * menuOpt);
 public slots:
 	void on_configAction_triggered();
     void on_testAction_triggered();

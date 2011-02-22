@@ -20,6 +20,7 @@ private:
 	bool jsgfModel;
 	int serverPort;
 	int samprate;
+	int samprateIndex;
 public:
 	Configuration();
 	virtual ~Configuration();
@@ -27,10 +28,12 @@ public:
     bool isJsgfModel() const;
     int getServerPort() const;
     int getSampRate() const;
+    int getSampRateIndex() const;
     void setFolder(string folder);
     void setJsgfModel(bool jsgfModel);
     void setServerPort(int serverPort);
     void setSampRate(int samprate);
+    void setSampRateIndex(int index);
 
 };
 

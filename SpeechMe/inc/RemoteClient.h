@@ -52,6 +52,7 @@ public:
 
 public slots:
 	void dataReadytoRead();
+	void on_disconnected();
 	
 private slots:
 	void on_newSentenceReady(const char*);
@@ -59,7 +60,7 @@ private slots:
 signals:
 	void newRequestArrived(RemoteClient* client, int req);
 	void newSentenceReady(const char*);
-	void unregistry(RemoteClient* client);
+	void clientUnregistered(RemoteClient* client);
 
 };
 #endif /* REMOTECLIENT_H_ */

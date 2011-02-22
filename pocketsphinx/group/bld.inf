@@ -12,6 +12,6 @@ PRJ_PLATFORMS
 DEFAULT
 
 PRJ_MMPFILES
-pocketsphinx.mmp
+pocketsphinx.mmp 
+batch.mmp 
 continuous.mmp
-batch.mmp

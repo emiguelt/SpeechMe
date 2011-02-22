@@ -10,6 +10,8 @@
 TARGET		  batch.exe
 TARGETTYPE	  STDEXE
 UID 0x20004C45 0xEEB10FA6
+EPOCSTACKSIZE 0x14000
+EPOCHEAPSIZE 0x020000 0x2000000 
 
 USERINCLUDE	 ..\include ..\src\libpocketsphinx ..\..\sphinxbase\include\s60
 USERINCLUDE ..\..\sphinxbase\include\sphinxbase ..\..\sphinxbase\include

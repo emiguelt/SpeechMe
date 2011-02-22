@@ -17,7 +17,7 @@ public:
     bool startServer(int port);
     void stopServer();
     bool isRunning();
-    void removeClient(RemoteClient* client);
+    QString getServerError();
     
 private:
     QTcpServer* server;
@@ -31,7 +31,7 @@ signals:
 
 public slots:
 	void newConnectionRequest();
-//	void dataReadytoRead();
+    void on_unregistered_client(RemoteClient* client);
 
 };
 

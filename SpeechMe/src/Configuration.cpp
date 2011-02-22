@@ -12,6 +12,8 @@ Configuration::Configuration()
 	folder = "";
 	jsgfModel = true;
 	serverPort= 10000;
+	samprateIndex = 0;
+	samprate = 8000;
 	}
 
 Configuration::~Configuration()
@@ -37,6 +39,13 @@ int Configuration::getSampRate() const
         return samprate;
     }
 
+int Configuration::getSampRateIndex() const{
+	return samprateIndex;
+}
+
+void Configuration::setSampRateIndex(int index){
+	samprateIndex = index;
+}
 void Configuration::setFolder(string folder)
     {
         this->folder = folder;
