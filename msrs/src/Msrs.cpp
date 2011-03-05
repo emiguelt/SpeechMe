@@ -77,7 +77,7 @@ bool Msrs::initDecoder(){
 		ps =  NULL;
 	}
 	ps = ps_init(config);
-	if(ps!=NULL && init_cont_module()){//&& init_cont_module()
+	if(ps!=NULL){//&& init_cont_module()
 		setStatus(INITIALIZED);
 		return true;
 	}else{
@@ -201,7 +201,7 @@ void Msrs::recognize_from_microphone()
 	char const *uttid;
 	char word[256];
 
-	//if(init_cont_module())
+	if(init_cont_module())
 		//if(calibrate_device())
 			if(ad_start_rec(ad) < 0){
 				close_cont_module();
