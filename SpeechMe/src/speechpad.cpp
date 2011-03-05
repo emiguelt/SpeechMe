@@ -11,9 +11,9 @@ SpeechPad::SpeechPad(QWidget *parent) :
     speechMe = (SpeechMe*)parent;
     localDecoding = false;
     
-    on_decoder_configured(speechMe->isDecoderConfigured());
+    on_decoder_configured(speechMe->isDecoderInitialized());
     connect(this, SIGNAL(newSentenceReady(const QString*)), this, SLOT(on_new_sentence_ready(const QString*)), Qt::BlockingQueuedConnection);
-    connect(this, SIGNAL(updateDecoderStatus(bool)), this, SLOT(on_update_decoder_status(bool)));
+    connect(this, SIGNAL(updateDecoderStatus(bool)), this, SLOT(on_update_decoder_status(bool)), Qt::BlockingQueuedConnection);
 }
 
 SpeechPad::~SpeechPad()

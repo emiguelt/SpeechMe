@@ -1,5 +1,5 @@
 EXPORTS
-	??0Msrs@@AAE@XZ @ 1 NONAME ABSENT ; Msrs::Msrs(void)
+	??0Msrs@@IAE@XZ @ 1 NONAME ; Msrs::Msrs(void)
 	??0Subject@@IAE@XZ @ 2 NONAME ; Subject::Subject(void)
 	??1?$_STLP_alloc_proxy@PAPAVObserver@@PAV1@V?$allocator@PAVObserver@@@std@@@std@@QAE@XZ @ 3 NONAME ; std::_STLP_alloc_proxy<class Observer * *, class Observer *, class std::allocator<class Observer *> >::~_STLP_alloc_proxy<class Observer * *, class Observer *, class std::allocator<class Observer *> >(void)
 	??1?$_Vector_base@PAVObserver@@V?$allocator@PAVObserver@@@std@@@std@@QAE@XZ @ 4 NONAME ; std::_Vector_base<class Observer *, class std::allocator<class Observer *> >::~_Vector_base<class Observer *, class std::allocator<class Observer *> >(void)
@@ -23,19 +23,19 @@ EXPORTS
 	?getInstance@Msrs@@SAPAV1@XZ @ 22 NONAME ; class Msrs * Msrs::getInstance(void)
 	?getLastSentence@Msrs@@QAEPBDXZ @ 23 NONAME ; char const * Msrs::getLastSentence(void)
 	?getStatus@Msrs@@QAEHXZ @ 24 NONAME ; int Msrs::getStatus(void)
-	?go@Msrs@@QAEXXZ @ 25 NONAME ; void Msrs::go(void)
-	?initDecoder@Msrs@@QAE_NXZ @ 26 NONAME ; bool Msrs::initDecoder(void)
+	?initDecoder@Msrs@@QAE_NXZ @ 25 NONAME ; bool Msrs::initDecoder(void)
+	?isIsolatedDecoding@Msrs@@QBE_NXZ @ 26 NONAME ; bool Msrs::isIsolatedDecoding(void) const
 	?isLiveDecoding@Msrs@@QBE_NXZ @ 27 NONAME ; bool Msrs::isLiveDecoding(void) const
-	?recognize_from_microphone@Msrs@@AAEXXZ @ 28 NONAME ABSENT ; void Msrs::recognize_from_microphone(void)
-	?setConfig@Msrs@@QAA_NPAUcmd_ln_s@@PBUarg_s@@HZZ @ 29 NONAME ABSENT ; bool Msrs::setConfig(struct cmd_ln_s *, struct arg_s const *, int, ...)
-	?setLastSentence@Msrs@@QAEXPBD@Z @ 30 NONAME ; void Msrs::setLastSentence(char const *)
-	?setLiveDecoding@Msrs@@QAEX_N@Z @ 31 NONAME ; void Msrs::setLiveDecoding(bool)
-	?setStatus@Msrs@@AAEXH@Z @ 32 NONAME ABSENT ; void Msrs::setStatus(int)
-	?sighandler@Msrs@@AAEXH@Z @ 33 NONAME ABSENT ; void Msrs::sighandler(int)
-	?sleep_msec@Msrs@@AAEXH@Z @ 34 NONAME ABSENT ; void Msrs::sleep_msec(int)
-	?startLiveDecoding@Msrs@@QAE_NXZ @ 35 NONAME ABSENT ; bool Msrs::startLiveDecoding(void)
-	?start_thread@Msrs@@SAPAXPAX@Z @ 36 NONAME ; void * Msrs::start_thread(void *)
-	?stop@Msrs@@QAEXXZ @ 37 NONAME ABSENT ; void Msrs::stop(void)
+	?recognize_from_microphone@Msrs@@IAEXXZ @ 28 NONAME ; void Msrs::recognize_from_microphone(void)
+	?setConfig@Msrs@@QAE_NPBD@Z @ 29 NONAME ; bool Msrs::setConfig(char const *)
+	?setIsolatedDecoding@Msrs@@QAEX_N@Z @ 30 NONAME ; void Msrs::setIsolatedDecoding(bool)
+	?setLastSentence@Msrs@@QAEXPBD@Z @ 31 NONAME ; void Msrs::setLastSentence(char const *)
+	?setLiveDecoding@Msrs@@QAEX_N@Z @ 32 NONAME ; void Msrs::setLiveDecoding(bool)
+	?setStatus@Msrs@@IAEXH@Z @ 33 NONAME ; void Msrs::setStatus(int)
+	?setTempClient@Msrs@@QAEXPAVObserver@@@Z @ 34 NONAME ; void Msrs::setTempClient(class Observer *)
+	?sighandler@Msrs@@IAEXH@Z @ 35 NONAME ; void Msrs::sighandler(int)
+	?sleep_msec@Msrs@@IAEXH@Z @ 36 NONAME ; void Msrs::sleep_msec(int)
+	?startLiveDecoding@Msrs@@QAE_N_N@Z @ 37 NONAME ; bool Msrs::startLiveDecoding(bool)
 	?stopLiveDecoding@Msrs@@QAEXXZ @ 38 NONAME ; void Msrs::stopLiveDecoding(void)
 	UDiv64 @ 39 NONAME
 	_Win32DllMain@12 @ 40 NONAME
@@ -53,42 +53,21 @@ EXPORTS
 	_purecall @ 52 NONAME
 	udiv64_divby0 @ 53 NONAME
 	?uid@@3UTEmulatorImageHeader@@A @ 54 NONAME ; struct TEmulatorImageHeader uid
-	?READY@Msrs@@2HA @ 55 NONAME ABSENT ; int Msrs::READY
-	?FAIL@Msrs@@2HA @ 56 NONAME ABSENT ; int Msrs::FAIL
-	?__xp_a@@3PAP6AXXZA @ 57 NONAME ; void (* *__xp_a)(void)
-	?DEListHead@@3PAUSDestructorEntry@@A @ 58 NONAME ; struct SDestructorEntry * DEListHead
-	??_7Msrs@@6B@~ @ 59 NONAME ; const Msrs::`vftable'
-	?__xp_z@@3PAP6AXXZA @ 60 NONAME ; void (* *__xp_z)(void)
-	??_R0?AVSubject@@@8~ @ 61 NONAME ; class Subject `MW RTTI Type Descriptor'
-	??_R0?AVMsrs@@@8~ @ 62 NONAME ; class Msrs `MW RTTI Type Descriptor'
-	?__xc_a@@3PAP6AXXZA @ 63 NONAME ; void (* *__xc_a)(void)
-	?__xc_z@@3PAP6AXXZA @ 64 NONAME ; void (* *__xc_z)(void)
-	??_7Subject@@6B@~ @ 65 NONAME ; const Subject::`vftable'
-	?instance@Msrs@@0PAV1@A @ 66 NONAME ABSENT ; class Msrs * Msrs::instance
-	?LISTENING@Msrs@@2HA @ 67 NONAME ABSENT ; int Msrs::LISTENING
-	?__xi_a@@3PAP6AXXZA @ 68 NONAME ; void (* *__xi_a)(void)
-	?__xt_a@@3PAP6AXXZA @ 69 NONAME ; void (* *__xt_a)(void)
-	?__xi_z@@3PAP6AXXZA @ 70 NONAME ; void (* *__xi_z)(void)
-	?__xt_z@@3PAP6AXXZA @ 71 NONAME ; void (* *__xt_z)(void)
-	?STOPPED@Msrs@@2HA @ 72 NONAME ABSENT ; int Msrs::STOPPED
-	?PROCESSING@Msrs@@2HA @ 73 NONAME ABSENT ; int Msrs::PROCESSING
-	?READY@Msrs@@2HB @ 74 NONAME ABSENT ; int const Msrs::READY
-	?FAIL@Msrs@@2HB @ 75 NONAME ABSENT ; int const Msrs::FAIL
-	?LISTENING@Msrs@@2HB @ 76 NONAME ABSENT ; int const Msrs::LISTENING
-	?STOPPED@Msrs@@2HB @ 77 NONAME ABSENT ; int const Msrs::STOPPED
-	?PROCESSING@Msrs@@2HB @ 78 NONAME ABSENT ; int const Msrs::PROCESSING
-	??0Msrs@@IAE@XZ @ 79 NONAME ; Msrs::Msrs(void)
-	?recognize_from_microphone@Msrs@@IAEXXZ @ 80 NONAME ; void Msrs::recognize_from_microphone(void)
-	?setStatus@Msrs@@IAEXH@Z @ 81 NONAME ; void Msrs::setStatus(int)
-	?sighandler@Msrs@@IAEXH@Z @ 82 NONAME ; void Msrs::sighandler(int)
-	?sleep_msec@Msrs@@IAEXH@Z @ 83 NONAME ; void Msrs::sleep_msec(int)
-	?CONFIGURED@Msrs@@2HB @ 84 NONAME ABSENT ; int const Msrs::CONFIGURED
-	?instance@Msrs@@1PAV1@A @ 85 NONAME ; class Msrs * Msrs::instance
-	?setConfig@Msrs@@QAE_NV?$basic_string@DV?$char_traits@D@std@@V?$allocator@D@2@@std@@000@Z @ 86 NONAME ABSENT ; bool Msrs::setConfig(class std::basic_string<char, class std::char_traits<char>, class std::allocator<char> >, class std::basic_string<char, class std::char_traits<char>, class std::allocator<char> >, class std::basic_string<char, class std::char_traits<char>, class std::allocator<char> >, class std::basic_string<char, class std::char_traits<char>, class std::allocator<char> >)
-	?setConfig@Msrs@@QAE_NPBD000@Z @ 87 NONAME ABSENT ; bool Msrs::setConfig(char const *, char const *, char const *, char const *)
-	?isIsolatedDecoding@Msrs@@QBE_NXZ @ 88 NONAME ; bool Msrs::isIsolatedDecoding(void) const
-	?setIsolatedDecoding@Msrs@@QAEX_N@Z @ 89 NONAME ; void Msrs::setIsolatedDecoding(bool)
-	?startLiveDecoding@Msrs@@QAE_N_N@Z @ 90 NONAME ; bool Msrs::startLiveDecoding(bool)
-	?setConfig@Msrs@@QAE_NPBD000_N@Z @ 91 NONAME ; bool Msrs::setConfig(char const *, char const *, char const *, char const *, bool)
-	?setTempClient@Msrs@@QAEXPAVObserver@@@Z @ 92 NONAME ; void Msrs::setTempClient(class Observer *)
+	?__xp_a@@3PAP6AXXZA @ 55 NONAME ; void (* *__xp_a)(void)
+	?DEListHead@@3PAUSDestructorEntry@@A @ 56 NONAME ; struct SDestructorEntry * DEListHead
+	??_7Msrs@@6B@~ @ 57 NONAME ; const Msrs::`vftable'
+	?__xp_z@@3PAP6AXXZA @ 58 NONAME ; void (* *__xp_z)(void)
+	??_R0?AVSubject@@@8~ @ 59 NONAME ; class Subject `MW RTTI Type Descriptor'
+	??_R0?AVMsrs@@@8~ @ 60 NONAME ; class Msrs `MW RTTI Type Descriptor'
+	?__xc_a@@3PAP6AXXZA @ 61 NONAME ; void (* *__xc_a)(void)
+	?__xc_z@@3PAP6AXXZA @ 62 NONAME ; void (* *__xc_z)(void)
+	??_7Subject@@6B@~ @ 63 NONAME ; const Subject::`vftable'
+	?__xi_a@@3PAP6AXXZA @ 64 NONAME ; void (* *__xi_a)(void)
+	?__xt_a@@3PAP6AXXZA @ 65 NONAME ; void (* *__xt_a)(void)
+	?__xi_z@@3PAP6AXXZA @ 66 NONAME ; void (* *__xi_z)(void)
+	?__xt_z@@3PAP6AXXZA @ 67 NONAME ; void (* *__xt_z)(void)
+	?instance@Msrs@@1PAV1@A @ 68 NONAME ; class Msrs * Msrs::instance
+	?calibrate_device@Msrs@@QAE_NXZ @ 69 NONAME ; bool Msrs::calibrate_device(void)
+	?close_cont_module@Msrs@@IAEXXZ @ 70 NONAME ; void Msrs::close_cont_module(void)
+	?init_cont_module@Msrs@@IAE_NXZ @ 71 NONAME ; bool Msrs::init_cont_module(void)
 

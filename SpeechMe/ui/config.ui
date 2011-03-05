@@ -26,15 +26,15 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Lang. folder</string>
+        <string>Config. file</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="languageFolder"/>
+      <widget class="QLineEdit" name="configFile"/>
      </item>
      <item>
-      <widget class="QPushButton" name="langButton">
+      <widget class="QPushButton" name="configFileButton">
        <property name="text">
         <string>...</string>
        </property>
@@ -43,58 +43,24 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>JSGF?</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="jsgf">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Samprate</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="sampRateCombo">
-       <item>
-        <property name="text">
-         <string>8000</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>11050</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>16000</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-    </layout>
+    <layout class="QHBoxLayout" name="horizontalLayout_2"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QPushButton" name="loadButton">
        <property name="text">
-        <string>Ok</string>
+        <string>Load language</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="calibButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Calibrate</string>
        </property>
       </widget>
      </item>
@@ -161,8 +127,8 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>languageFolder</tabstop>
-  <tabstop>langButton</tabstop>
+  <tabstop>configFile</tabstop>
+  <tabstop>configFileButton</tabstop>
   <tabstop>loadButton</tabstop>
  </tabstops>
  <resources/>

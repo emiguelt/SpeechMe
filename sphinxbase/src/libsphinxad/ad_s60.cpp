@@ -178,7 +178,7 @@ CAudioDevice* CAudioDevice::NewL(){
  * Request to record samples.
  */
 void CAudioDevice::ResumeRecording(){
-    iCommandQueue.SendBlocking(EStartRecording);
+	iCommandQueue.SendBlocking(EStartRecording);
     
     TInt message = ENullMessage;
     iNotificationQueue.ReceiveBlocking(message);

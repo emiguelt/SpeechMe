@@ -13,6 +13,7 @@
 #include <QTextStream>
 #include <Observer.h>
 #include <Msrs.h>
+#include <qmutex.h>
 
 class RemoteClient : public QObject, public Observer
 {
@@ -22,6 +23,7 @@ private:
     QTcpSocket* socket;
     QTextStream* stream;
     bool registered;
+    QMutex mutex;
     
     const char* getCharStatus(int i);
     
