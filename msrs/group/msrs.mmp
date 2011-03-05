@@ -25,7 +25,7 @@ DEBUGGABLE_UDEBONLY
 SOURCEPATH ..\src
 SOURCE Msrs.cpp Observer.cpp
 
-LIBRARY libm.lib pocketsphinx.lib sphinxbase.lib libpthread.lib
+LIBRARY libm.lib pocketsphinx.lib sphinxbase.lib
 CAPABILITY UserEnvironment
 
 #ifdef ENABLE_ABIV2_MODE

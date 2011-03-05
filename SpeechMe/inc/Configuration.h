@@ -16,25 +16,15 @@ using namespace std;
 class Configuration
 	{
 private:
-	string folder;
-	bool jsgfModel;
+	string configFile;
 	int serverPort;
-	int samprate;
-	int samprateIndex;
 public:
 	Configuration();
 	virtual ~Configuration();
-	string getFolder();
-    bool isJsgfModel() const;
+	string getConfigFile();
     int getServerPort() const;
-    int getSampRate() const;
-    int getSampRateIndex() const;
-    void setFolder(string folder);
-    void setJsgfModel(bool jsgfModel);
+    void setConfigFile(string file);
     void setServerPort(int serverPort);
-    void setSampRate(int samprate);
-    void setSampRateIndex(int index);
-
 };
 
 #endif /* CONFIGURATION_H_ */

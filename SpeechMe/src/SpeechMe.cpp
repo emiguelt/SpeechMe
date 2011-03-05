@@ -5,7 +5,7 @@
  Copyright   : 
  Description : Class Implementation
 ============================================================================
-*/
+ */
 
 #include "SpeechMe.h"
 #include <errno.h>
@@ -13,45 +13,42 @@
 #include "speechpad.h"
 #include "speechweb.h"
 #include "ConfigUi.h"
-#include "decoderthread.h"
 #include <QMessageBox>
 
 
 SpeechMe::SpeechMe(QMainWindow *parent)
-    : QMainWindow(parent)
-{
+: QMainWindow(parent){
 	ui.setupUi(this);
-	msrs = Msrs::getInstance();
-	msrs->Attach(this);
-	//initExtraUi();
 	conf = new Configuration();
+	decoderTh = DecoderThread::getInstance(this, conf);
+	connect(decoderTh, SIGNAL(decoderthStarted()), this, SLOT(on_decoderth_started()));
+	decoderTh->start();
+}
 
+void SpeechMe::on_decoderth_started(){
+	Msrs::getInstance()->Attach(this);
 	speechRemote = new SpeechRemote(this);
-	
 	createConnections();
-	
-	decoderConfigured = false;
-
 	on_configAction_triggered();
-
 }
 
 SpeechMe::~SpeechMe()
-{
-	msrs->Detach(this);
+	{
+	Msrs::getInstance()->Detach(this);
 	//delete msrs;
-}
+	}
 
 void SpeechMe::createConnections(){
-  connect(ui.actionConfig, SIGNAL(triggered()),this , SLOT(on_configAction_triggered()));
-  connect(ui.actionSpeechPad, SIGNAL(triggered()),this , SLOT(on_testAction_triggered()));
-  connect(ui.actionSpeechWeb, SIGNAL(triggered()), this, SLOT(on_webAction_triggered()));
-  connect(this, SIGNAL(newStatusMessage(const QString &)), ui.statusbar, SLOT(showMessage(const QString &)));
-  connect(speechRemote, SIGNAL(registerClient(RemoteClient*)), this, SLOT(on_registerClient(RemoteClient*)));
-  connect(this, SIGNAL(decoderStatusUpdated(int)), this, SLOT(on_updated_decoder_status(int)));
+	connect(ui.actionConfig, SIGNAL(triggered()),this , SLOT(on_configAction_triggered()));
+	connect(ui.actionSpeechPad, SIGNAL(triggered()),this , SLOT(on_testAction_triggered()));
+	connect(ui.actionSpeechWeb, SIGNAL(triggered()), this, SLOT(on_webAction_triggered()));
+	connect(this, SIGNAL(newStatusMessage(const QString &)), ui.statusbar, SLOT(showMessage(const QString &)));
+	connect(speechRemote, SIGNAL(registerClient(RemoteClient*)), this, SLOT(on_registerClient(RemoteClient*)));
+	connect(this, SIGNAL(decoderStatusUpdated(int)), this, SLOT(on_updated_decoder_status(int)), Qt::BlockingQueuedConnection);
 }
 
 void SpeechMe::Update(Subject* subject){
+	Msrs* msrs = Msrs::getInstance();
 	emit decoderStatusUpdated(msrs->getStatus());
 }
 
@@ -60,14 +57,14 @@ void SpeechMe::UpdateSentence(Subject* subject){
 
 void SpeechMe::on_updated_decoder_status(int statusNumber){
 	QString* status;
+	Msrs* msrs = Msrs::getInstance();
 	switch(msrs->getStatus()){
 		case Msrs::CONFIGURED:
 			status = new QString(tr("Configured"));
-		    break;
+			break;
 		case Msrs::INITIALIZED:
 			status = new QString(tr("Initialized"));
-			decoderConfigured = true;
-		    break;
+			break;
 		case Msrs::READY:
 			status = new QString(tr("Ready"));
 			break;
@@ -117,19 +114,18 @@ void SpeechMe::updateMenu(QAction * menuOpt){
 	menuOpt->setEnabled(false);
 }
 
-
-
 void SpeechMe::on_serverButton_clicked(){
 	if(speechRemote->isRunning()){
 		speechRemote->stopServer();
 		configui->setServerRunning(FALSE);
 	}else{
-            if(speechRemote->startServer(conf->getServerPort())){
-                configui->setServerRunning(TRUE);
-            }else{
-                QMessageBox::critical(this, "Speech server", tr("Unable to start server - %1").arg(speechRemote->getServerError()));
-                configui->setServerRunning(FALSE);
-            }
+		if(speechRemote->startServer(conf->getServerPort())){
+			configui->setServerRunning(TRUE);
+		}else{
+			QMessageBox::critical(this, "Speech server", 
+					tr("Unable to start server - %1").arg(speechRemote->getServerError()));
+			configui->setServerRunning(FALSE);
+		}
 	}
 }
 
@@ -138,18 +134,16 @@ bool SpeechMe::isSpeechRemoteRunning(){
 }
 
 void SpeechMe::initDecoding(RemoteClient * client, bool opt)
-{
-	DecoderThread* decThread = new DecoderThread();
+	{
 	emit newStatusMessage(tr("Init decoding..."));
-	if(!msrs->isLiveDecoding()){
-		msrs->setTempClient(client);
-	    decThread->setIsolated(opt);
-	   decThread->start();
+	if(!decoderTh->getMsrsWorker()->isLiveDecoding()){
+		decoderTh->getMsrsWorker()->setTempClient(client);
+		emit startLiveDecoding(opt);
 	}else{
 		client->decoderBusy();
 		emit newStatusMessage(tr("Decoder busy"));
 	}
-}
+	}
 
 void SpeechMe::on_newrequest_arrived(RemoteClient* client, int request){
 	switch(request){
@@ -165,36 +159,69 @@ void SpeechMe::on_newrequest_arrived(RemoteClient* client, int request){
 }
 
 void SpeechMe::on_registerClient(RemoteClient* client){
-	connect(client, SIGNAL(newRequestArrived(RemoteClient*, int)), this, SLOT(on_newrequest_arrived(RemoteClient*, int)));
+	connect(client, SIGNAL(newRequestArrived(RemoteClient*, int)), 
+			this, SLOT(on_newrequest_arrived(RemoteClient*, int)));
 	client->registerClient();
 }
 
 void SpeechMe::initLocalDecoding(bool opt){
-   DecoderThread* decThread = new DecoderThread();
 	emit newStatusMessage(tr("Local decoding..."));
-	if(!msrs->isLiveDecoding()){
-      decThread->setIsolated(opt);
-      decThread->start();
-//		msrs->startLiveDecoding(opt);
+	if(!decoderTh->getMsrsWorker()->isLiveDecoding()){
+		emit startLiveDecoding(opt);
 	}
 }
 
 bool SpeechMe::isLiveDecoding(){
-	return msrs->isLiveDecoding();
+	return decoderTh->getMsrsWorker()->isLiveDecoding();
 }
 
 void SpeechMe::stopLiveDecoding(){
-	msrs->stopLiveDecoding();
+	decoderTh->getMsrsWorker()->stopLiveDecoding();
 }
 
-bool SpeechMe::isDecoderConfigured(){
-	return decoderConfigured;
+bool SpeechMe::isDecoderInitialized(){
+	return decoderTh->getMsrsWorker()->isDecoderInitialized();
 }
 
 void SpeechMe::on_decoder_configured(bool status){
-	decoderConfigured = status;
+	if(prgDialog==NULL){
+		return;
+	}
+	if(status){
+		prgDialog->updateProgressStatus(tr("Decoder configured"), 50);
+	}else{
+		prgDialog->close();
+		delete prgDialog;
+	}
+}
+
+void SpeechMe::on_decoder_initialized(bool status){
+	if(prgDialog==NULL){
+		return;
+	}
+	if(status){
+		prgDialog->updateProgressStatus(tr("Decoder initialized"), 100);
+		prgDialog->close();
+		delete prgDialog;
+	}
 }
 
 void SpeechMe::on_hideAction_triggered(){
- this->showMinimized();
+	this->showMinimized();
+}
+
+void SpeechMe::on_load_decoder(){
+	emit loadDecoder();
+	prgDialog = new ProgressDialog(this, tr("Decoder"));
+	prgDialog->setModal(true);
+	prgDialog->updateProgressStatus(tr("Initializing"), 0);
+	prgDialog->show();
+}
+
+void SpeechMe::on_mic_calibrated(bool status){
+	if(status){
+		ui.statusbar->showMessage(tr("Device calibrated"), 2000);
+	}else{
+		ui.statusbar->showMessage(tr("Error during calibration"), 2000);
+	}
 }

@@ -19,7 +19,6 @@ class ConfigUi: public QWidget
 private:
   Ui::ConfigUi ui;
   SpeechMe* speechMe;
-  Msrs* msrs;
   Configuration* conf;
 
 public:
@@ -29,13 +28,15 @@ public:
   void setServerRunning(bool opt);
 
 public slots:
-  void on_langButton_clicked();
+  void on_configFileButton_clicked();
   void on_loadButton_clicked();
   void on_serverButton_clicked();
+  void on_decoder_initialized(bool status);
+  void on_decoder_configured(bool status);
 
 signals:
   void serverButton_clicked();
-  void decoder_configured(bool status);
+  void loadDecoder();
 };
 
 #endif /* CONFIGUI_H_ */

@@ -53,12 +53,14 @@ void RemoteClient::on_disconnected(){
 }
 
 void RemoteClient::sendmsg(const char * message){
+	mutex.lock();
 	try{
 	*stream<<message;
 	stream->flush();
 	}catch(std::exception& e){
 		qDebug()<<e.what();
 	}
+	mutex.unlock();
 }
 
 QTcpSocket* RemoteClient::getSocket(){
@@ -98,6 +100,7 @@ void RemoteClient::UpdateSentence(Subject* subject){
 }
 
 void RemoteClient::on_newSentenceReady(const char* sentence){
+	
 	sendmsg(sentence);
 }
 

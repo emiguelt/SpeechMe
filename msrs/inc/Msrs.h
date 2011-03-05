@@ -13,7 +13,6 @@
 #include <sphinxbase/cont_ad.h>
 #include <pocketsphinx.h>
 #include <sphinxbase/cmd_ln.h>
-#include <pthread.h>
 #include "Observer.h"
 
 using namespace std;
@@ -47,6 +46,8 @@ protected:
 	jmp_buf jbuf;
 	ps_decoder_t *ps;
 	cmd_ln_t *config;
+	ad_rec_t *ad;
+	cont_ad_t *cont;
 	FILE* rawfd;
 	bool liveDecoding;
 	bool isolatedDecoding;
@@ -60,13 +61,14 @@ protected:
 	
 	void setStatus(int newStatus);
 	void sleep_msec(int32 ms);
-	void	sighandler(int signo);
-	void	recognize_from_microphone();
+	void sighandler(int signo);
+	void recognize_from_microphone();
+	bool init_cont_module();
+	void close_cont_module();
 	
 public:
 	static Msrs *getInstance();
-	static void *start_thread(void *obj);
-	bool setConfig(const char* lm, const char* hmm, const char* dict, const char* samprate, bool isJsgf);
+	bool setConfig(const char* conffile);
     bool initDecoder();
     bool startLiveDecoding(bool isolated);
     void stopLiveDecoding();
@@ -77,8 +79,8 @@ public:
     char const * getLastSentence();
     void setLastSentence(char const* newSentence);
     int getStatus();
-    void go();
     void setTempClient(Observer* client);
+    bool calibrate_device();
     virtual ~Msrs();
     
     //static variables

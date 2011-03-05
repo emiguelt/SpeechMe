@@ -9,59 +9,30 @@
 
 Configuration::Configuration()
 	{
-	folder = "";
-	jsgfModel = true;
+	configFile = "";
 	serverPort= 10000;
-	samprateIndex = 0;
-	samprate = 8000;
 	}
 
 Configuration::~Configuration()
 	{
 	}
 
-string Configuration::getFolder(){
-    return folder;
+string Configuration::getConfigFile(){
+    return configFile;
 }
-
-bool Configuration::isJsgfModel() const
-    {
-        return jsgfModel;
-    }
 
 int Configuration::getServerPort() const
     {
         return serverPort;
     }
 
-int Configuration::getSampRate() const
-    {
-        return samprate;
-    }
 
-int Configuration::getSampRateIndex() const{
-	return samprateIndex;
-}
-
-void Configuration::setSampRateIndex(int index){
-	samprateIndex = index;
-}
-void Configuration::setFolder(string folder)
+void Configuration::setConfigFile(string file)
     {
-        this->folder = folder;
-    }
-
-void Configuration::setJsgfModel(bool jsgfModel)
-    {
-        this->jsgfModel = jsgfModel;
+        configFile = file;
     }
 
 void Configuration::setServerPort(int serverPort)
     {
         this->serverPort = serverPort;
-    }
-
-void Configuration::setSampRate(int samprate)
-    {
-        this->samprate = samprate;
     }

@@ -16,6 +16,8 @@
 #include "Configuration.h"
 #include "ui_SpeechMe2.h"
 #include "speechremote.h"
+#include "decoderthread.h"
+#include "progressdialog.h"
 
 namespace Ui {
     class SpeechMe2;
@@ -37,7 +39,7 @@ public:
     void initLocalDecoding(bool opt);
     void stopLiveDecoding();
     bool isLiveDecoding();
-    bool isDecoderConfigured();
+    bool isDecoderInitialized();
     bool isSpeechRemoteRunning();
     
     static const int CMD_ISOLATED_RECOGNITION=1;
@@ -53,13 +55,14 @@ private:
     SpeechPad* speechPad;
     SpeechWeb* speechWeb;
     SpeechRemote* speechRemote;
-    Msrs* msrs;
-    bool decoderConfigured;
+    DecoderThread* decoderTh;
+    ProgressDialog* prgDialog;
     
     //void initExtraUi();
     void createConnections();
     void initDecoding(RemoteClient * client, bool opt);
     void updateMenu(QAction * menuOpt);
+
 public slots:
 	void on_configAction_triggered();
     void on_testAction_triggered();
@@ -68,14 +71,20 @@ public slots:
     void on_serverButton_clicked();
     void on_newrequest_arrived(RemoteClient* client, int request);
     void on_registerClient(RemoteClient* client);
+    void on_mic_calibrated(bool status);
+    void on_decoder_initialized(bool status);
     void on_decoder_configured(bool status);
+    void on_load_decoder();
+    void on_decoderth_started();
     
 private slots:
     void on_updated_decoder_status(int statusNumber);
     
 signals:
     void newStatusMessage(const QString &);
+    void startLiveDecoding(bool);
     void decoderStatusUpdated(int);
+    void loadDecoder();
 };
 
 #endif // SPEECHME_H
