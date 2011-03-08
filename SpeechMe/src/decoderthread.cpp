@@ -51,7 +51,7 @@ void MsrsThread::on_calib_mic(){
 }
 
 void MsrsThread::on_start_live_decoding(bool isolated){
-	msrs->startLiveDecoding(true);
+	msrs->startLiveDecoding(isolated);
 }
 
 void MsrsThread::Attach(Observer* observer){
