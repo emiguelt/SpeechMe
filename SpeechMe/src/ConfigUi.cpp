@@ -30,7 +30,6 @@ ConfigUi::ConfigUi(QWidget *parent, Configuration* conf)
 	connect(this, SIGNAL(loadDecoder()), parent, SLOT(on_load_decoder()));
 	connect(decoder->getMsrsWorker(), SIGNAL(decInitialized(bool)), this, SLOT(on_decoder_initialized(bool)));
 	connect(decoder->getMsrsWorker(), SIGNAL(decConfigured(bool)), this, SLOT(on_decoder_configured(bool)));
-	connect(ui.calibButton, SIGNAL(clicked()), decoder->getMsrsWorker(), SLOT(on_calib_mic()));
 }
 
 ConfigUi::~ConfigUi(){
@@ -53,7 +52,6 @@ void ConfigUi::on_loadButton_clicked(){
 	conf->setConfigFile(filepath.data());
 
 	emit loadDecoder();
-	//ui.loadButton->setEnabled(TRUE);
 }
 
 int ConfigUi::getServerPort(){
@@ -75,7 +73,6 @@ void ConfigUi::on_serverButton_clicked(){
 }
 
 void ConfigUi::on_decoder_initialized(bool status){
-	ui.calibButton->setEnabled(status);
 	ui.loadButton->setEnabled(true);
 }
 

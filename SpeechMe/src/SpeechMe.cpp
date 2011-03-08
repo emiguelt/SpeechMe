@@ -166,7 +166,7 @@ void SpeechMe::on_registerClient(RemoteClient* client){
 
 void SpeechMe::initLocalDecoding(bool opt){
 	emit newStatusMessage(tr("Local decoding..."));
-	if(!decoderTh->getMsrsWorker()->isLiveDecoding()){
+	if(!isLiveDecoding()){
 		emit startLiveDecoding(opt);
 	}
 }
