@@ -41,6 +41,9 @@ void MsrsThread::on_load_decoder(){
 		emit decConfigured(true);
 		decoderInitialized = msrs->initDecoder();
 		emit decInitialized(decoderInitialized);
+//		if(decoderInitialized){
+//			emit micCalibrated(msrs->calibrate_device());
+//		}
 	}else{
 		emit decConfigured(false);
 	}
@@ -78,7 +81,7 @@ void DecoderThread::run(){
 	worker = new MsrsThread(NULL, speechconf);
 	connect(worker, SIGNAL(decConfigured(bool)), parent(), SLOT(on_decoder_configured(bool)));
 	connect(worker, SIGNAL(decInitialized(bool)), parent(), SLOT(on_decoder_initialized(bool)));
-	connect(worker, SIGNAL(micCalibrated(bool)), parent(), SLOT(on_mic_calibrated(bool)));
+//	connect(worker, SIGNAL(micCalibrated(bool)), parent(), SLOT(on_mic_calibrated(bool)));
 	connect(parent(), SIGNAL(startLiveDecoding(bool)), worker, SLOT(on_start_live_decoding(bool)));
 	connect(parent(), SIGNAL(loadDecoder()), worker , SLOT(on_load_decoder()));
 	emit decoderthStarted();
