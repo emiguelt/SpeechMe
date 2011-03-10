@@ -40,7 +40,7 @@ symbian {
     TARGET.UID3 = 0xEE74B26E
     TARGET.EPOCSTACKSIZE = 0x14000
     TARGET.EPOCHEAPSIZE = 0x020000 \
-        0x2000000
+        0x800000
     TARGET.CAPABILITY = "UserEnvironment"
     LIBS += -lsphinxbase \
         -lpocketsphinx \

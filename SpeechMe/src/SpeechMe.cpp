@@ -188,8 +188,9 @@ void SpeechMe::on_decoder_configured(bool status){
 		return;
 	}
 	if(status){
-		prgDialog->updateProgressStatus(tr("Decoder configured"), 50);
+		prgDialog->updateProgressStatus(tr("Initializing decoder"), 50);
 	}else{
+		prgDialog->updateProgressStatus(tr("Configuration failed"), 0);
 		prgDialog->close();
 		delete prgDialog;
 	}
@@ -201,9 +202,11 @@ void SpeechMe::on_decoder_initialized(bool status){
 	}
 	if(status){
 		prgDialog->updateProgressStatus(tr("Decoder initialized"), 100);
-		prgDialog->close();
-		delete prgDialog;
+	}else{
+		prgDialog->updateProgressStatus(tr("Initialization failed"), 0);
 	}
+	prgDialog->close();
+	delete prgDialog;
 }
 
 void SpeechMe::on_hideAction_triggered(){
@@ -214,14 +217,20 @@ void SpeechMe::on_load_decoder(){
 	emit loadDecoder();
 	prgDialog = new ProgressDialog(this, tr("Decoder"));
 	prgDialog->setModal(true);
-	prgDialog->updateProgressStatus(tr("Initializing"), 0);
+	prgDialog->updateProgressStatus(tr("Loading configuration"), 0);
 	prgDialog->show();
 }
 
 void SpeechMe::on_mic_calibrated(bool status){
-	if(status){
-		ui.statusbar->showMessage(tr("Device calibrated"), 2000);
-	}else{
-		ui.statusbar->showMessage(tr("Error during calibration"), 2000);
-	}
+//	if(prgDialog==NULL){
+//			return;
+//		}
+//		if(status){
+//			prgDialog->updateProgressStatus(tr("Device calibrated"), 100);
+//		}else{
+//			prgDialog->updateProgressStatus(tr("Calibration failed"), 0);
+//			emit newStatusMessage(tr("Initialized, not calibrated"));
+//		}
+//		prgDialog->close();
+//		delete prgDialog;
 }
