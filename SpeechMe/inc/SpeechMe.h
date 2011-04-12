@@ -62,6 +62,8 @@ private:
     void createConnections();
     void initDecoding(RemoteClient * client, bool opt);
     void updateMenu(QAction * menuOpt);
+    void loadSettings();
+    void writeSettings();
 
 public slots:
 	void on_configAction_triggered();
