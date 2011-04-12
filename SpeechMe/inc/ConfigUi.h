@@ -33,6 +33,8 @@ public slots:
   void on_serverButton_clicked();
   void on_decoder_initialized(bool status);
   void on_decoder_configured(bool status);
+  void on_configFile_textChanged();
+  void on_portSphinBox_changed();
 
 signals:
   void serverButton_clicked();

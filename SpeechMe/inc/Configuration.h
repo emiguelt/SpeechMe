@@ -14,14 +14,14 @@ using namespace std;
 
 
 class Configuration
-	{
+{
 private:
-	string configFile;
-	int serverPort;
+    string configFile;
+    int serverPort;
 public:
-	Configuration();
-	virtual ~Configuration();
-	string getConfigFile();
+    Configuration();
+    virtual ~Configuration();
+    string getConfigFile();
     int getServerPort() const;
     void setConfigFile(string file);
     void setServerPort(int serverPort);

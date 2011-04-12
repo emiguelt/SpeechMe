@@ -123,4 +123,8 @@
  </tabstops>
  <resources/>
  <connections/>
+ <slots>
+  <slot>on_configFile_textChanged(QString)</slot>
+  <slot>on_portSphinBox_changed(int)</slot>
+ </slots>
 </ui>
