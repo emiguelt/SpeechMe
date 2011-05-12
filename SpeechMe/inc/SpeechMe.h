@@ -73,6 +73,7 @@ public slots:
     void on_serverButton_clicked();
     void on_newrequest_arrived(RemoteClient* client, int request);
     void on_registerClient(RemoteClient* client);
+    void on_clientQueueModified();
     void on_mic_calibrated(bool status);
     void on_decoder_initialized(bool status);
     void on_decoder_configured(bool status);
