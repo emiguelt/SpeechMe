@@ -26,6 +26,7 @@ public:
   virtual ~ConfigUi();
   int getServerPort();
   void setServerRunning(bool opt);
+  void setCurrentConnections(int value);
 
 public slots:
   void on_configFileButton_clicked();

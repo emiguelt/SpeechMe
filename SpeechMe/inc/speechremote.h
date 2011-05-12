@@ -18,6 +18,7 @@ public:
     void stopServer();
     bool isRunning();
     QString getServerError();
+    int numberOfConnections();
     
 private:
     QTcpServer* server;
@@ -28,6 +29,7 @@ private:
 signals:
     void newSentenceReady();
     void registerClient(RemoteClient* client);
+    void clientUnregistered();
 
 public slots:
 	void newConnectionRequest();

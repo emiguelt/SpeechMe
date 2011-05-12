@@ -45,6 +45,7 @@ void SpeechMe::createConnections(){
     connect(ui.actionSpeechWeb, SIGNAL(triggered()), this, SLOT(on_webAction_triggered()));
     connect(this, SIGNAL(newStatusMessage(const QString &)), ui.statusbar, SLOT(showMessage(const QString &)));
     connect(speechRemote, SIGNAL(registerClient(RemoteClient*)), this, SLOT(on_registerClient(RemoteClient*)));
+    connect(speechRemote, SIGNAL(clientUnregistered()), this, SLOT(on_clientQueueModified()));
     connect(this, SIGNAL(decoderStatusUpdated(int)), this, SLOT(on_updated_decoder_status(int)), Qt::BlockingQueuedConnection);
 }
 
@@ -94,6 +95,7 @@ void SpeechMe::on_configAction_triggered(){
     configui = new ConfigUi(this, conf);
     setCentralWidget(configui);
     updateMenu(ui.actionConfig);
+    on_clientQueueModified();
 }
 
 void SpeechMe::on_testAction_triggered(){
@@ -163,6 +165,7 @@ void SpeechMe::on_registerClient(RemoteClient* client){
     connect(client, SIGNAL(newRequestArrived(RemoteClient*, int)),
             this, SLOT(on_newrequest_arrived(RemoteClient*, int)));
     client->registerClient();
+    on_clientQueueModified();
 }
 
 void SpeechMe::initLocalDecoding(bool opt){
@@ -234,6 +237,12 @@ void SpeechMe::writeSettings(){
     settings.setValue("serverPort", conf->getServerPort());
     settings.setValue("configFile", conf->getConfigFile().c_str());
     settings.sync();
+}
+
+void SpeechMe::on_clientQueueModified(){
+	if(centralWidget()==configui){
+		configui->setCurrentConnections(speechRemote->numberOfConnections());
+	}
 }
 
 void SpeechMe::on_mic_calibrated(bool status){

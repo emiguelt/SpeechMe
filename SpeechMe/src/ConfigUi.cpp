@@ -105,3 +105,7 @@ void ConfigUi::on_portSphinBox_changed()
 	{
 	conf->setServerPort(ui.portSphinBox->value());
 	}
+
+void ConfigUi::setCurrentConnections(int value){
+	ui.connections->setText(QString::number(value));
+}

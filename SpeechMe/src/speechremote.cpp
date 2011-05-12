@@ -19,7 +19,7 @@ SpeechRemote::~SpeechRemote(){
 void SpeechRemote::newConnectionRequest(){
 	QTcpSocket* newClient = server->nextPendingConnection();
 	RemoteClient* client = new RemoteClient(this);
-	connect(client, SIGNAL(clientUnregistered(RemoteClient *)), this, SLOT(on_registered_client(RemoteClient *)));
+	connect(client, SIGNAL(clientUnregistered(RemoteClient *)), this, SLOT(on_unregistered_client(RemoteClient *)));
 	remClients.append(client);
 	client->setSocket(newClient);
 	emit registerClient(client);
@@ -64,5 +64,10 @@ bool SpeechRemote::isRunning(){
 
 void SpeechRemote::on_unregistered_client(RemoteClient * client){
 	remClients.removeOne(client);
+	emit clientUnregistered();
+}
+
+int SpeechRemote::numberOfConnections(){
+	return remClients.size();
 }
 
