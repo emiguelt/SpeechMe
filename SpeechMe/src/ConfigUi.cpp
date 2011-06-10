@@ -15,8 +15,8 @@
 using namespace std;
 
 ConfigUi::ConfigUi(QWidget *parent, Configuration* conf) :
-	QWidget(parent)
-	{
+			QWidget(parent)
+		{
 	ui.setupUi(this);
 	this->conf = conf;
 	speechMe = (SpeechMe*) parent;
@@ -36,7 +36,7 @@ ConfigUi::ConfigUi(QWidget *parent, Configuration* conf) :
 			SLOT(on_decoder_configured(bool)));
 	connect(ui.configFile, SIGNAL(textChanged(QString)), this, SLOT(on_configFile_textChanged()));
 	connect(ui.portSphinBox, SIGNAL(valueChanged(int)), this, SLOT(on_portSphinBox_changed()));
-	}
+		}
 
 ConfigUi::~ConfigUi()
 	{
@@ -47,8 +47,10 @@ ConfigUi::~ConfigUi()
 void ConfigUi::on_configFileButton_clicked()
 	{
 	QFileDialog* qfd = new QFileDialog;
-	ui.configFile->setText(qfd->getOpenFileName(this, tr("Config. file"),
-			"E:\\"));
+	QString file(qfd->getOpenFileName(this, tr("Config. file"),"E:\\"));
+	if(!file.isEmpty()){
+		ui.configFile->setText(file);
+	}
 	delete qfd;
 	}
 
