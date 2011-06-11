@@ -41,7 +41,7 @@ symbian {
     TARGET.EPOCSTACKSIZE = 0x14000
     TARGET.EPOCHEAPSIZE = 0x020000 \
         0x800000
-    TARGET.CAPABILITY = "UserEnvironment"
+    TARGET.CAPABILITY = "NetworkServices UserEnvironment"
     LIBS += -lsphinxbase \
         -lpocketsphinx \
         -lmsrs
