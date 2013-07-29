@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SpeechMe2</class>
+ <widget class="QMainWindow" name="SpeechMe2">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>301</width>
+    <height>442</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Speech me!</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>301</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuMenu">
+    <property name="title">
+     <string>Menu</string>
+    </property>
+    <addaction name="actionConfig"/>
+    <addaction name="actionSpeechPad"/>
+    <addaction name="actionSpeechWeb"/>
+   </widget>
+   <addaction name="menuMenu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionConfig">
+   <property name="text">
+    <string>Config...</string>
+   </property>
+  </action>
+  <action name="actionSpeechPad">
+   <property name="text">
+    <string>SpeechPad</string>
+   </property>
+  </action>
+  <action name="actionSpeechWeb">
+   <property name="text">
+    <string>SpeechWeb</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,73 @@
+EXPORTS
+	??0Msrs@@IAE@XZ @ 1 NONAME ; Msrs::Msrs(void)
+	??0Subject@@IAE@XZ @ 2 NONAME ; Subject::Subject(void)
+	??1?$_STLP_alloc_proxy@PAPAVObserver@@PAV1@V?$allocator@PAVObserver@@@std@@@std@@QAE@XZ @ 3 NONAME ; std::_STLP_alloc_proxy<class Observer * *, class Observer *, class std::allocator<class Observer *> >::~_STLP_alloc_proxy<class Observer * *, class Observer *, class std::allocator<class Observer *> >(void)
+	??1?$_Vector_base@PAVObserver@@V?$allocator@PAVObserver@@@std@@@std@@QAE@XZ @ 4 NONAME ; std::_Vector_base<class Observer *, class std::allocator<class Observer *> >::~_Vector_base<class Observer *, class std::allocator<class Observer *> >(void)
+	??1?$allocator@PAVObserver@@@std@@QAE@XZ @ 5 NONAME ; std::allocator<class Observer *>::~allocator<class Observer *>(void)
+	??1?$vector@PAVObserver@@V?$allocator@PAVObserver@@@std@@@std@@QAE@XZ @ 6 NONAME ; std::vector<class Observer *, class std::allocator<class Observer *> >::~vector<class Observer *, class std::allocator<class Observer *> >(void)
+	??1Msrs@@UAE@XZ @ 7 NONAME ; Msrs::~Msrs(void)
+	??1Subject@@UAE@XZ @ 8 NONAME ; Subject::~Subject(void)
+	??2@YAPAXI@Z @ 9 NONAME ; void * operator new(unsigned int)
+	??2@YAPAXII@Z @ 10 NONAME ; void * operator new(unsigned int, unsigned int)
+	??_EMsrs@@UAE@I@Z @ 11 NONAME ; Msrs::~Msrs(unsigned int)
+	??_ESubject@@UAE@I@Z @ 12 NONAME ; Subject::~Subject(unsigned int)
+	??_U@YAPAXI@Z @ 13 NONAME ; void * operator new[](unsigned int)
+	?Attach@Subject@@UAEXPAVObserver@@@Z @ 14 NONAME ; void Subject::Attach(class Observer *)
+	?CleanupCWRuntime@@YAHXZ @ 15 NONAME ; int CleanupCWRuntime(void)
+	?Detach@Subject@@UAEXPAVObserver@@@Z @ 16 NONAME ; void Subject::Detach(class Observer *)
+	?InitCWRuntime@@YAHXZ @ 17 NONAME ; int InitCWRuntime(void)
+	?Notify@Subject@@UAEXXZ @ 18 NONAME ; void Subject::Notify(void)
+	?NotifyNewSentece@Subject@@UAEXXZ @ 19 NONAME ; void Subject::NotifyNewSentece(void)
+	?_Construct@?$@PAVObserver@@PAV1@@std@@YAXPAPAV1@ABQAV1@@Z @ 20 NONAME ; void std::_Construct<class Observer *, class Observer *>(class Observer * *, class Observer * const const &)
+	?_M_insert_overflow@?$vector@PAVObserver@@V?$allocator@PAVObserver@@@std@@@std@@IAEXPAPAVObserver@@ABQAV3@ABU__true_type@2@I_N@Z @ 21 NONAME ; void std::vector<class Observer *, class std::allocator<class Observer *> >::_M_insert_overflow(class Observer * *, class Observer * const const &, struct std::__true_type const &, unsigned int, bool)
+	?getInstance@Msrs@@SAPAV1@XZ @ 22 NONAME ; class Msrs * Msrs::getInstance(void)
+	?getLastSentence@Msrs@@QAEPBDXZ @ 23 NONAME ; char const * Msrs::getLastSentence(void)
+	?getStatus@Msrs@@QAEHXZ @ 24 NONAME ; int Msrs::getStatus(void)
+	?initDecoder@Msrs@@QAE_NXZ @ 25 NONAME ; bool Msrs::initDecoder(void)
+	?isIsolatedDecoding@Msrs@@QBE_NXZ @ 26 NONAME ; bool Msrs::isIsolatedDecoding(void) const
+	?isLiveDecoding@Msrs@@QBE_NXZ @ 27 NONAME ; bool Msrs::isLiveDecoding(void) const
+	?recognize_from_microphone@Msrs@@IAEXXZ @ 28 NONAME ; void Msrs::recognize_from_microphone(void)
+	?setConfig@Msrs@@QAE_NPBD@Z @ 29 NONAME ; bool Msrs::setConfig(char const *)
+	?setIsolatedDecoding@Msrs@@QAEX_N@Z @ 30 NONAME ; void Msrs::setIsolatedDecoding(bool)
+	?setLastSentence@Msrs@@QAEXPBD@Z @ 31 NONAME ; void Msrs::setLastSentence(char const *)
+	?setLiveDecoding@Msrs@@QAEX_N@Z @ 32 NONAME ; void Msrs::setLiveDecoding(bool)
+	?setStatus@Msrs@@IAEXH@Z @ 33 NONAME ; void Msrs::setStatus(int)
+	?setTempClient@Msrs@@QAEXPAVObserver@@@Z @ 34 NONAME ; void Msrs::setTempClient(class Observer *)
+	?sighandler@Msrs@@IAEXH@Z @ 35 NONAME ; void Msrs::sighandler(int)
+	?sleep_msec@Msrs@@IAEXH@Z @ 36 NONAME ; void Msrs::sleep_msec(int)
+	?startLiveDecoding@Msrs@@QAE_N_N@Z @ 37 NONAME ; bool Msrs::startLiveDecoding(bool)
+	?stopLiveDecoding@Msrs@@QAEXXZ @ 38 NONAME ; void Msrs::stopLiveDecoding(void)
+	UDiv64 @ 39 NONAME
+	_Win32DllMain@12 @ 40 NONAME
+	__xp_a @ 41 NONAME
+	_alldiv @ 42 NONAME
+	_alldvrm @ 43 NONAME
+	_allmul @ 44 NONAME
+	_allrem @ 45 NONAME
+	_allshl @ 46 NONAME
+	_allshr @ 47 NONAME
+	_aulldiv @ 48 NONAME
+	_aulldvrm @ 49 NONAME
+	_aullrem @ 50 NONAME
+	_aullshr @ 51 NONAME
+	_purecall @ 52 NONAME
+	udiv64_divby0 @ 53 NONAME
+	?uid@@3UTEmulatorImageHeader@@A @ 54 NONAME ; struct TEmulatorImageHeader uid
+	?__xp_a@@3PAP6AXXZA @ 55 NONAME ; void (* *__xp_a)(void)
+	?DEListHead@@3PAUSDestructorEntry@@A @ 56 NONAME ; struct SDestructorEntry * DEListHead
+	??_7Msrs@@6B@~ @ 57 NONAME ; const Msrs::`vftable'
+	?__xp_z@@3PAP6AXXZA @ 58 NONAME ; void (* *__xp_z)(void)
+	??_R0?AVSubject@@@8~ @ 59 NONAME ; class Subject `MW RTTI Type Descriptor'
+	??_R0?AVMsrs@@@8~ @ 60 NONAME ; class Msrs `MW RTTI Type Descriptor'
+	?__xc_a@@3PAP6AXXZA @ 61 NONAME ; void (* *__xc_a)(void)
+	?__xc_z@@3PAP6AXXZA @ 62 NONAME ; void (* *__xc_z)(void)
+	??_7Subject@@6B@~ @ 63 NONAME ; const Subject::`vftable'
+	?__xi_a@@3PAP6AXXZA @ 64 NONAME ; void (* *__xi_a)(void)
+	?__xt_a@@3PAP6AXXZA @ 65 NONAME ; void (* *__xt_a)(void)
+	?__xi_z@@3PAP6AXXZA @ 66 NONAME ; void (* *__xi_z)(void)
+	?__xt_z@@3PAP6AXXZA @ 67 NONAME ; void (* *__xt_z)(void)
+	?instance@Msrs@@1PAV1@A @ 68 NONAME ; class Msrs * Msrs::instance
+	?calibrate_device@Msrs@@QAE_NXZ @ 69 NONAME ; bool Msrs::calibrate_device(void)
+	?close_cont_module@Msrs@@IAEXXZ @ 70 NONAME ; void Msrs::close_cont_module(void)
+	?init_cont_module@Msrs@@IAE_NXZ @ 71 NONAME ; bool Msrs::init_cont_module(void)
+
